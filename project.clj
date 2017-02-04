@@ -9,6 +9,7 @@
                  [integrant "0.2.0"]
                  [meta-merge "1.0.0"]
                  [ring/ring-core "1.5.1"]
-                 [ring/ring-defaults "0.2.2"]]
+                 [ring/ring-defaults "0.2.2"]
+                 [ring-webjars "0.1.1"]]
   :profiles
   {:dev {:dependencies [[ring/ring-mock "0.3.0"]]}})

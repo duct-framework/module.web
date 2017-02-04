@@ -54,5 +54,6 @@
         (add-server options)
         (add-handler)
         (add-middleware ::mw/not-found   {:response error-404})
+        (add-middleware ::mw/webjars     {})
         (add-middleware ::mw/defaults    site-defaults)
         (add-middleware ::mw/hide-errors {:response error-500}))))
