@@ -5,7 +5,7 @@
             [duct.server.http.jetty :as jetty]
             [integrant.core :as ig]
             [meta-merge.core :refer [meta-merge]]
-            [ring.middleware.defaults :refer [api-defaults site-defaults]]))
+            [ring.middleware.defaults :as defaults]))
 
 (defn- not-in? [m ks]
   (= (get-in m ks ::missing) ::missing))
@@ -42,11 +42,14 @@
         (add-server options)
         (add-handler)
         (add-middleware ::mw/not-found   {:response "Resource Not Found"})
-        (add-middleware ::mw/defaults    api-defaults)
+        (add-middleware ::mw/defaults    defaults/api-defaults)
         (add-middleware ::mw/hide-errors {:response "Internal Server Error"}))))
 
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
 (def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
+
+(def ^:private site-defaults
+  (assoc-in defaults/site-defaults [:static :resources] ["duct/module/web/public"]))
 
 (defmethod ig/init-key ::site [_ options]
   (fn [config]
