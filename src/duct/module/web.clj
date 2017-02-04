@@ -1,10 +1,11 @@
 (ns duct.module.web
-  (:require [duct.core.web :as core]
+  (:require [clojure.java.io :as io]
+            [duct.core.web :as core]
             [duct.middleware.web :as mw]
             [duct.server.http.jetty :as jetty]
             [integrant.core :as ig]
             [meta-merge.core :refer [meta-merge]]
-            [ring.middleware.defaults :refer [api-defaults]]))
+            [ring.middleware.defaults :refer [api-defaults site-defaults]]))
 
 (defn- not-in? [m ks]
   (= (get-in m ks ::missing) ::missing))
@@ -43,3 +44,15 @@
         (add-middleware ::mw/not-found   {:response "Resource Not Found"})
         (add-middleware ::mw/defaults    api-defaults)
         (add-middleware ::mw/hide-errors {:response "Internal Server Error"}))))
+
+(def ^:private error-404 (io/resource "duct/static/404.html"))
+(def ^:private error-500 (io/resource "duct/static/500.html"))
+
+(defmethod ig/init-key ::site [_ options]
+  (fn [config]
+    (-> config
+        (add-server options)
+        (add-handler)
+        (add-middleware ::mw/not-found   {:response error-404})
+        (add-middleware ::mw/defaults    site-defaults)
+        (add-middleware ::mw/hide-errors {:response error-500}))))
