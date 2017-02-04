@@ -45,8 +45,8 @@
         (add-middleware ::mw/defaults    api-defaults)
         (add-middleware ::mw/hide-errors {:response "Internal Server Error"}))))
 
-(def ^:private error-404 (io/resource "duct/static/404.html"))
-(def ^:private error-500 (io/resource "duct/static/500.html"))
+(def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
+(def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
 
 (defmethod ig/init-key ::site [_ options]
   (fn [config]
