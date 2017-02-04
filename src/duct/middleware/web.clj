@@ -1,6 +1,9 @@
 (ns duct.middleware.web
   (:require [compojure.response :as compojure]
             [integrant.core :as ig]
+            [ring.middleware.defaults :refer [wrap-defaults]]
+            [ring.middleware.stacktrace :refer [wrap-stacktrace]]
+            [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.util.response :as response]))
 
 (defn wrap-hide-errors [handler error-response]
@@ -35,13 +38,10 @@
   #(wrap-route-aliases % aliases))
 
 (defmethod ig/init-key ::defaults [_ defaults]
-  (require 'ring.middleware.defaults)
-  (eval `#(ring.middleware.defaults/wrap-defaults % ~defaults)))
+  #(wrap-defaults % defaults))
 
 (defmethod ig/init-key ::webjars [_ {:keys [path] :or {path "/assets"}}]
-  (require 'ring.middleware.webjars)
-  (eval `#(ring.middleware.defaults/wrap-webjars % ~path)))
+  #(wrap-webjars % path))
 
 (defmethod ig/init-key ::stacktrace [_ options]
-  (require 'ring.middleware.stacktrace)
-  (eval `#(ring.middleware.stacktrace/wrap-stacktrace % ~options)))
+  #(wrap-stacktrace % options))
