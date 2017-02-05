@@ -19,10 +19,10 @@
 (defn- conj-middleware [middleware key]
   (cond-> middleware (missing-middleware? middleware key) (conj (ig/ref key))))
 
-(defn- add-server [config {:keys [port] :or {port 3000}}]
+(defn- add-server [config {:keys [server-port] :or {server-port 3000}}]
   (if-let [[[k v]] (ig/find-derived config :duct.server/http)]
-    (assoc-in-default config [k :port] port)
-    (assoc config :duct.server.http/jetty {:port port})))
+    (assoc-in-default config [k :port] server-port)
+    (assoc config :duct.server.http/jetty {:port server-port})))
 
 (defn- add-handler [config]
   (let [[[k v]] (ig/find-derived config :duct.server/http)]
