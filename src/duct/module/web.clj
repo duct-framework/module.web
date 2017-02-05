@@ -48,8 +48,9 @@
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
 (def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
 
-(def ^:private site-defaults
-  (assoc-in defaults/site-defaults [:static :resources] ["duct/module/web/public"]))
+(defn- site-defaults [{:keys [static-resources]}]
+  (assoc-in defaults/site-defaults [:static :resources]
+            (into ["duct/module/web/public"] (if static-resources [static-resources]))))
 
 (defmethod ig/init-key ::site [_ options]
   (fn [config]
@@ -58,5 +59,5 @@
         (add-handler)
         (add-middleware ::mw/not-found   {:response error-404})
         (add-middleware ::mw/webjars     {})
-        (add-middleware ::mw/defaults    site-defaults)
+        (add-middleware ::mw/defaults    (site-defaults options))
         (add-middleware ::mw/hide-errors {:response error-500}))))
