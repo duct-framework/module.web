@@ -1,17 +1,12 @@
 (ns duct.module.web
   (:require [clojure.java.io :as io]
+            [duct.core :refer [assoc-in-default]]
             [duct.core.web :as core]
             [duct.middleware.web :as mw]
             [duct.server.http.jetty :as jetty]
             [integrant.core :as ig]
             [meta-merge.core :refer [meta-merge]]
             [ring.middleware.defaults :as defaults]))
-
-(defn- not-in? [m ks]
-  (= (get-in m ks ::missing) ::missing))
-
-(defn- assoc-in-default [config keys default]
-  (cond-> config (not-in? config keys) (assoc-in keys default)))
 
 (defn- missing-middleware? [middleware key]
   (not (contains? (set (map :key middleware)) key)))
