@@ -31,14 +31,23 @@
       (update-in [::core/handler :middleware] conj-middleware key)
       (update key (partial meta-merge value))))
 
+(defn- get-env [config options]
+  (:environment options (:duct.core/environment config :production)))
+
+(defn- add-error-middleware [config options response]
+  (let [env (get-env config options)]
+    (cond-> config
+      (= env :production)  (add-middleware ::mw/hide-errors {:response response})
+      (= env :development) (add-middleware ::mw/stacktrace  {}))))
+
 (defmethod ig/init-key ::api [_ options]
   (fn [config]
     (-> config
         (add-server options)
         (add-handler)
-        (add-middleware ::mw/not-found   {:response "Resource Not Found"})
-        (add-middleware ::mw/defaults    defaults/api-defaults)
-        (add-middleware ::mw/hide-errors {:response "Internal Server Error"}))))
+        (add-middleware ::mw/not-found {:response "Resource Not Found"})
+        (add-middleware ::mw/defaults  defaults/api-defaults)
+        (add-error-middleware options  "Internal Server Error"))))
 
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
 (def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
@@ -52,7 +61,7 @@
     (-> config
         (add-server options)
         (add-handler)
-        (add-middleware ::mw/not-found   {:response error-404})
-        (add-middleware ::mw/webjars     {})
-        (add-middleware ::mw/defaults    (site-defaults options))
-        (add-middleware ::mw/hide-errors {:response error-500}))))
+        (add-middleware ::mw/not-found {:response error-404})
+        (add-middleware ::mw/webjars   {})
+        (add-middleware ::mw/defaults  (site-defaults options))
+        (add-error-middleware options error-500))))
