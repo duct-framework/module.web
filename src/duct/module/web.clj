@@ -34,6 +34,15 @@
 (defn- get-env [config options]
   (:environment options (:duct.core/environment config :production)))
 
+(defn- add-log-middleware [config]
+  (let [[server _] (ig/find-derived-1 config :duct.server/http)]
+    (if-let [[logger _] (ig/find-derived-1 config :duct/logger)]
+      (-> config
+          (assoc-in-default [server :logger] (ig/ref logger))
+          (add-middleware conj ::mw/log-requests {:logger (ig/ref logger)})
+          (add-middleware conj ::mw/log-errors   {:logger (ig/ref logger)}))
+      config)))
+
 (defn- add-error-middleware [config options response]
   (let [env (get-env config options)]
     (cond-> config
@@ -47,7 +56,8 @@
         (add-handler)
         (add-middleware conj ::mw/not-found {:response "Resource Not Found"})
         (add-middleware conj ::mw/defaults  defaults/api-defaults)
-        (add-error-middleware options  "Internal Server Error"))))
+        (add-log-middleware)
+        (add-error-middleware options "Internal Server Error"))))
 
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
 (def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
@@ -64,4 +74,5 @@
         (add-middleware conj ::mw/not-found {:response error-404})
         (add-middleware conj ::mw/webjars   {})
         (add-middleware conj ::mw/defaults  (site-defaults options))
+        (add-log-middleware)
         (add-error-middleware options error-500))))
