@@ -6,7 +6,10 @@
             [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.util.response :as response]))
 
-(defn wrap-hide-errors [handler error-response]
+(defn wrap-hide-errors
+  "Middleware that hides any uncaught exceptions behind a generic 500 internal
+  error response. Intended for use in production."
+  [handler error-response]
   (fn [request]
     (try
       (handler request)
@@ -15,7 +18,9 @@
             (response/content-type "text/html")
             (response/status 500))))))
 
-(defn wrap-not-found [handler error-response]
+(defn wrap-not-found
+  "Middleware that returns a 404 not found response if the handler returns nil."
+  [handler error-response]
   (fn [request]
     (or (handler request)
         (-> (compojure/render error-response request)
@@ -23,6 +28,9 @@
             (response/status 404)))))
 
 (defn wrap-route-aliases [handler aliases]
+  "Middleware that takes a map of URI aliases. If the URI of the request matches
+  a URI in the map's keys, the URI is changed to the value corresponding to that
+  key."
   (fn [request]
     (if-let [alias (aliases (:uri request))]
       (handler (assoc request :uri alias))
