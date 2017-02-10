@@ -18,6 +18,16 @@
     (p/log logger :info ::request (select-keys request request-log-keys))
     (handler request)))
 
+(defn wrap-log-errors
+  "Log any exceptions with the supplied logger, then re-throw them."
+  [handler logger]
+  (fn [request]
+    (try
+      (handler request)
+      (catch Throwable ex
+        (p/log-ex logger :error ex)
+        (throw ex)))))
+
 (defn wrap-hide-errors
   "Middleware that hides any uncaught exceptions behind a generic 500 internal
   error response. Intended for use in production."
@@ -50,6 +60,9 @@
 
 (defmethod ig/init-key ::request-logging [_ {:keys [logger]}]
   #(wrap-request-logging % logger))
+
+(defmethod ig/init-key ::log-errors [_ {:keys [logger]}]
+  #(wrap-log-errors % logger))
 
 (defmethod ig/init-key ::hide-errors [_ {:keys [response]}]
   #(wrap-hide-errors % response))
