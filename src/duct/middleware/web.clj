@@ -1,10 +1,22 @@
 (ns duct.middleware.web
   (:require [compojure.response :as compojure]
+            [duct.core.protocols :as p]
             [integrant.core :as ig]
             [ring.middleware.defaults :refer [wrap-defaults]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
             [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.util.response :as response]))
+
+(def ^:private request-log-keys
+  [:request-method :uri :query-string])
+
+(defn wrap-request-logging
+  "Log each request using the supplied logger. The logger must implement the
+  duct.core.protocols/Logger protocol."
+  [handler logger]
+  (fn [request]
+    (p/log logger :info ::request (select-keys request request-log-keys))
+    (handler request)))
 
 (defn wrap-hide-errors
   "Middleware that hides any uncaught exceptions behind a generic 500 internal
@@ -35,6 +47,9 @@
     (if-let [alias (aliases (:uri request))]
       (handler (assoc request :uri alias))
       (handler request))))
+
+(defmethod ig/init-key ::request-logging [_ {:keys [logger]}]
+  #(wrap-request-logging % logger))
 
 (defmethod ig/init-key ::hide-errors [_ {:keys [response]}]
   #(wrap-hide-errors % response))
