@@ -10,7 +10,7 @@
 (def ^:private request-log-keys
   [:request-method :uri :query-string])
 
-(defn wrap-request-logging
+(defn wrap-log-requests
   "Log each request using the supplied logger. The logger must implement the
   duct.core.protocols/Logger protocol."
   [handler logger]
@@ -58,8 +58,8 @@
       (handler (assoc request :uri alias))
       (handler request))))
 
-(defmethod ig/init-key ::request-logging [_ {:keys [logger]}]
-  #(wrap-request-logging % logger))
+(defmethod ig/init-key ::log-requests [_ {:keys [logger]}]
+  #(wrap-log-requests % logger))
 
 (defmethod ig/init-key ::log-errors [_ {:keys [logger]}]
   #(wrap-log-errors % logger))
