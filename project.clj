@@ -10,10 +10,10 @@
                  [integrant "0.2.1"]
                  [meta-merge "1.0.0"]
                  [org.slf4j/slf4j-nop "1.7.21"]
+                 [org.webjars/normalize.css "5.0.0"]
                  [ring/ring-core "1.5.1"]
                  [ring/ring-devel "1.5.1"]
                  [ring/ring-defaults "0.2.3"]
-                 [ring-webjars "0.1.1"]
-                 [org.webjars/normalize.css "5.0.0"]]
+                 [ring-webjars "0.1.1"]]
   :profiles
   {:dev {:dependencies [[ring/ring-mock "0.3.0"]]}})
