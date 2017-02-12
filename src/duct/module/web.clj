@@ -9,16 +9,18 @@
             [meta-merge.core :refer [meta-merge]]
             [ring.middleware.defaults :as defaults]))
 
+(def ^:private default-server-port 3000)
+
 (defn- missing-middleware? [middleware key]
   (not (contains? (set (map :key middleware)) key)))
 
 (defn- update-middleware [middleware func key]
   (cond-> middleware (missing-middleware? middleware key) (func (ig/ref key))))
 
-(defn- add-server [config {:keys [server-port] :or {server-port 3000}}]
+(defn- add-server [config]
   (if-let [[k v] (ig/find-derived-1 config :duct.server/http)]
-    (assoc-in-default config [k :port] server-port)
-    (assoc config :duct.server.http/jetty {:port server-port})))
+    (assoc-in-default config [k :port] default-server-port)
+    (assoc config :duct.server.http/jetty {:port default-server-port})))
 
 (defn- add-handler [config]
   (let [[k v] (ig/find-derived-1 config :duct.server/http)]
@@ -78,7 +80,7 @@
 (defmethod ig/init-key ::site [_ options]
   (fn [config]
     (-> config
-        (add-server options)
+        (add-server)
         (add-handler)
         (add-middleware conj ::mw/not-found {:response error-404})
         (add-middleware conj ::mw/webjars   {})
