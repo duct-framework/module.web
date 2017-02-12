@@ -1,5 +1,6 @@
 (ns duct.module.web
   (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [duct.core :refer [assoc-in-default]]
             [duct.core.web :as core]
             [duct.middleware.web :as mw]
@@ -34,6 +35,12 @@
 (defn- get-env [config options]
   (:environment options (:duct.core/environment config :production)))
 
+(defn- get-project-ns [config options]
+  (:project-ns options (:duct.core/project-ns config)))
+
+(defn- name-to-path [sym]
+  (-> sym name (str/replace "-" "_") (str/replace "." "/")))
+
 (defn- add-log-middleware [config]
   (let [[server _] (ig/find-derived-1 config :duct.server/http)]
     (if-let [[logger _] (ig/find-derived-1 config :duct/logger)]
@@ -62,9 +69,11 @@
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
 (def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
 
-(defn- site-defaults [{:keys [static-resources]}]
-  (assoc-in defaults/site-defaults [:static :resources]
-            (into ["duct/module/web/public"] (if static-resources [static-resources]))))
+(defn- site-defaults [config options]
+  (let [dirs      (name-to-path (get-project-ns config options))
+        resources ["duct/module/web/public" (str dirs "/public")]]
+    (-> defaults/site-defaults
+        (assoc-in [:static :resources] resources))))
 
 (defmethod ig/init-key ::site [_ options]
   (fn [config]
@@ -73,6 +82,6 @@
         (add-handler)
         (add-middleware conj ::mw/not-found {:response error-404})
         (add-middleware conj ::mw/webjars   {})
-        (add-middleware conj ::mw/defaults  (site-defaults options))
+        (add-middleware conj ::mw/defaults  (site-defaults config options))
         (add-log-middleware)
         (add-error-middleware options error-500))))
