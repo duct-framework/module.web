@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [duct.core :refer [assoc-in-default]]
+            [duct.core.env :as env]
             [duct.core.web :as core]
             [duct.middleware.web :as mw]
             [duct.server.http.jetty :as jetty]
@@ -9,7 +10,8 @@
             [meta-merge.core :refer [meta-merge]]
             [ring.middleware.defaults :as defaults]))
 
-(def ^:private default-server-port 3000)
+(def ^:private server-port
+  (env/env '["PORT" Int :or 3000]))
 
 (defn- missing-middleware? [middleware key]
   (not (contains? (set (map :key middleware)) key)))
@@ -19,8 +21,8 @@
 
 (defn- add-server [config]
   (if-let [[k v] (ig/find-derived-1 config :duct.server/http)]
-    (assoc-in-default config [k :port] default-server-port)
-    (assoc config :duct.server.http/jetty {:port default-server-port})))
+    (assoc-in-default config [k :port] server-port)
+    (assoc config :duct.server.http/jetty {:port server-port})))
 
 (defn- add-handler [config]
   (let [[k v] (ig/find-derived-1 config :duct.server/http)]
