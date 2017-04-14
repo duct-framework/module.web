@@ -20,9 +20,7 @@
 (deftest api-module-test
   (is (= (core/prep api-config)
          (merge api-config
-                {:duct.middleware.web/log-requests
-                 {:logger (ig/ref :duct.core/logger)}
-                 :duct.core.web/handler
+                {:duct.core.web/handler
                  {:endpoints []
                   :middleware
                   [(ig/ref :duct.middleware.web/not-found)
@@ -42,15 +40,15 @@
                  {:response "Internal Server Error"}
                  :duct.middleware.web/not-found
                  {:response "Resource Not Found"}
+                 :duct.middleware.web/log-requests
+                 {:logger (ig/ref :duct/logger)}
                  :duct.middleware.web/log-errors
-                 {:logger (ig/ref :duct.core/logger)}}))))
+                 {:logger (ig/ref :duct/logger)}}))))
 
 (deftest site-module-test
   (is (= (core/prep site-config)
          (merge site-config
-                {:duct.middleware.web/log-requests
-                 {:logger (ig/ref :duct.core/logger)}
-                 :duct.core.web/handler
+                {:duct.core.web/handler
                  {:endpoints []
                   :middleware
                   [(ig/ref :duct.middleware.web/not-found)
@@ -82,5 +80,7 @@
                  {:response (io/resource "duct/module/web/errors/500.html")}
                  :duct.middleware.web/not-found
                  {:response (io/resource "duct/module/web/errors/404.html")}
+                 :duct.middleware.web/log-requests
+                 {:logger (ig/ref :duct/logger)}
                  :duct.middleware.web/log-errors
-                 {:logger (ig/ref :duct.core/logger)}}))))
+                 {:logger (ig/ref :duct/logger)}}))))

@@ -34,8 +34,8 @@
 (def ^:private logging-config
   {::web/handler     {:middleware ^:distinct [(ig/ref ::mw/log-requests)
                                               (ig/ref ::mw/log-errors)]}
-   ::mw/log-requests {:logger (ig/ref ::core/logger)}
-   ::mw/log-errors   {:logger (ig/ref ::core/logger)}})
+   ::mw/log-requests {:logger (ig/ref :duct/logger)}
+   ::mw/log-errors   {:logger (ig/ref :duct/logger)}})
 
 (def ^:private error-configs
   {:production
