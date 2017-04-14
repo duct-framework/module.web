@@ -50,6 +50,7 @@
                                               (ig/ref ::mw/defaults)]}
    ::mw/not-found    {:response (merge/displace "Resource Not Found")}
    ::mw/hide-errors  {:response (merge/displace "Internal Server Error")}
+   ::mw/stacktrace   {}
    ::mw/defaults     (merge/displace defaults/api-defaults)})
 
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
@@ -67,9 +68,10 @@
                       :middleware ^:distinct [(ig/ref ::mw/not-found)
                                               (ig/ref ::mw/webjars)
                                               (ig/ref ::mw/defaults)]}
-   ::mw/webjars      {}
    ::mw/not-found    {:response (merge/displace error-404)}
    ::mw/hide-errors  {:response (merge/displace error-500)}
+   ::mw/webjars      {}
+   ::mw/stacktrace   {}
    ::mw/defaults     (merge/displace (site-defaults project-ns))})
 
 (defmethod ig/init-key ::api [_ options]
