@@ -1,6 +1,6 @@
 (ns duct.middleware.web
   (:require [compojure.response :as compojure]
-            [duct.core :as duct]
+            [duct.logger :as logger]
             [integrant.core :as ig]
             [ring.middleware.defaults :refer [wrap-defaults]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
@@ -15,7 +15,7 @@
   duct.core.protocols/Logger protocol."
   [handler logger]
   (fn [request]
-    (duct/log logger :info ::request (select-keys request request-log-keys))
+    (logger/log logger :info ::request (select-keys request request-log-keys))
     (handler request)))
 
 (defn wrap-log-errors
@@ -25,7 +25,7 @@
     (try
       (handler request)
       (catch Throwable ex
-        (duct/log logger :error ::handler-error ex)
+        (logger/log logger :error ::handler-error ex)
         (throw ex)))))
 
 (defn wrap-hide-errors
