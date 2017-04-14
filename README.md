@@ -1,5 +1,7 @@
 # Duct module.web
 
+[![Build Status](https://travis-ci.org/duct-framework/module.web.svg?branch=master)](https://travis-ci.org/duct-framework/module.web)
+
 A [Duct][] module that adds a web server and useful middleware to a
 configuration. This is the basis of all web applications built with
 Duct.
