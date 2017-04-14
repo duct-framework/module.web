@@ -35,7 +35,9 @@
                               :content-types true
                               :default-charset "utf-8"}}
                  :duct.server.http/jetty
-                 {:port 3000, :handler (ig/ref :duct.core.web/handler)}
+                 {:port 3000
+                  :handler (ig/ref :duct.core.web/handler)
+                  :logger  (ig/ref :duct/logger)}
                  :duct.middleware.web/stacktrace {}
                  :duct.middleware.web/hide-errors
                  {:response "Internal Server Error"}
@@ -75,7 +77,9 @@
                               :content-types          true
                               :default-charset        "utf-8"}}
                  :duct.server.http/jetty
-                 {:port 3000, :handler (ig/ref :duct.core.web/handler)}
+                 {:port 3000
+                  :handler (ig/ref :duct.core.web/handler)
+                  :logger  (ig/ref :duct/logger)}
                  :duct.middleware.web/webjars {}
                  :duct.middleware.web/stacktrace {}
                  :duct.middleware.web/hide-errors

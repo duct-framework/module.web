@@ -44,7 +44,8 @@
    {::web/handler {:middleware ^:distinct [(ig/ref ::mw/stacktrace)]}}})
 
 (def ^:private api-config
-  {:duct.server/http {:handler (ig/ref ::web/handler)}
+  {:duct.server/http {:handler (ig/ref ::web/handler)
+                      :logger  (ig/ref :duct/logger)}
    ::web/handler     {:endpoints  []
                       :middleware ^:distinct [(ig/ref ::mw/not-found)
                                               (ig/ref ::mw/defaults)]}
@@ -63,7 +64,8 @@
   (assoc-in defaults/site-defaults [:static :resources] (site-resource-paths project-ns)))
 
 (defn- site-config [project-ns]
-  {:duct.server/http {:handler (ig/ref ::web/handler)}
+  {:duct.server/http {:handler (ig/ref ::web/handler)
+                      :logger  (ig/ref :duct/logger)}
    ::web/handler     {:endpoints  []
                       :middleware ^:distinct [(ig/ref ::mw/not-found)
                                               (ig/ref ::mw/webjars)
