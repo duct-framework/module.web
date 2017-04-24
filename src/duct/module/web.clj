@@ -76,18 +76,23 @@
    ::mw/stacktrace   {}
    ::mw/defaults     (merge/displace (site-defaults project-ns))})
 
+(derive ::api  :duct/module)
+(derive ::site :duct/module)
+
 (defmethod ig/init-key ::api [_ options]
-  (fn [config]
-    (core/merge-configs config
-                        (server-config config)
-                        api-config
-                        logging-config
-                        (error-configs (get-environment config options)))))
+  {:req #{:duct/logger}
+   :fn  (fn [config]
+          (core/merge-configs config
+                              (server-config config)
+                              api-config
+                              logging-config
+                              (error-configs (get-environment config options))))})
 
 (defmethod ig/init-key ::site [_ options]
-  (fn [config]
-    (core/merge-configs config
-                        (server-config config)
-                        (site-config (get-project-ns config options))
-                        logging-config
-                        (error-configs (get-environment config options)))))
+  {:req #{:duct/logger}
+   :fn  (fn [config]
+          (core/merge-configs config
+                              (server-config config)
+                              (site-config (get-project-ns config options))
+                              logging-config
+                              (error-configs (get-environment config options))))})

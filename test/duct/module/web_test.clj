@@ -5,16 +5,18 @@
             [duct.module.web :as web]
             [integrant.core :as ig]))
 
+(derive :duct.logger/fake :duct/logger)
+
 (def api-config
   {:duct.core/project-ns  'foo
    :duct.core/environment :production
-   :duct.core/modules     [(ig/ref :duct.module.web/api)]
+   :duct.logger/fake      {}
    :duct.module.web/api   {}})
 
 (def site-config
   {:duct.core/project-ns  'foo
    :duct.core/environment :production
-   :duct.core/modules     [(ig/ref :duct.module.web/site)]
+   :duct.logger/fake      {}
    :duct.module.web/site  {}})
 
 (deftest api-module-test
