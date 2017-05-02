@@ -6,9 +6,10 @@
             [duct.core.merge :as merge]
             [duct.core.web :as web]
             [duct.middleware.web :as mw]
-            [duct.server.http.jetty :as jetty]
             [integrant.core :as ig]
             [ring.middleware.defaults :as defaults]))
+
+(derive :duct.server.http/jetty :duct.server/http)
 
 (def ^:private server-port
   (env/env '["PORT" Int :or 3000]))
