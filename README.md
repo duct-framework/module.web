@@ -21,7 +21,6 @@ To add this module to your configuration, add a reference to
 
 ```edn
 {:duct.core/project-ns foo
- :duct.core/modules    [#ref :duct.module.web/api]
  :duct.module.web/api  {}}
 ```
 
@@ -30,7 +29,6 @@ application:
 
 ```edn
 {:duct.core/project-ns foo
- :duct.core/modules    [#ref :duct.module.web/site]
  :duct.module.web/site {}}
 ```
 
