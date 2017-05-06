@@ -6,6 +6,7 @@
             [integrant.core :as ig]))
 
 (derive :duct.logger/fake :duct/logger)
+(derive :duct.router/fake :duct/router)
 (derive :duct.server.http/fake :duct.server/http)
 
 (def api-config
@@ -25,7 +26,7 @@
          (merge api-config
                 {:duct.router/cascading {:endpoints []}
                  :duct.core/handler
-                 {:router (ig/ref :duct.router/cascading)
+                 {:router (ig/ref :duct/router)
                   :middleware
                   [(ig/ref :duct.middleware.web/not-found)
                    (ig/ref :duct.middleware.web/defaults)
@@ -57,7 +58,7 @@
          (merge site-config
                 {:duct.router/cascading {:endpoints []}
                  :duct.core/handler
-                 {:router (ig/ref :duct.router/cascading)
+                 {:router (ig/ref :duct/router)
                   :middleware
                   [(ig/ref :duct.middleware.web/not-found)
                    (ig/ref :duct.middleware.web/webjars)
@@ -104,3 +105,9 @@
            {:port    8080
             :handler (ig/ref :duct.core/handler)
             :logger  (ig/ref :duct/logger)}))))
+
+(deftest router-test
+  (let [config  (assoc api-config :duct.router/fake {})
+        prepped (core/prep config)]
+    (is (not (contains? prepped :duct.router/cascading)))
+    (is (= (:duct.router/fake prepped) {}))))

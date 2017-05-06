@@ -32,6 +32,11 @@
 (defn- server-config [config]
   {(http-server-key config) {:port (merge/displace server-port)}})
 
+(defn- router-config [config]
+  (if-not (ig/find-derived-1 config :duct/router)
+    {:duct.router/cascading {:endpoints []}}
+    {}))
+
 (def ^:private logging-config
   {::mw/log-requests {:logger (ig/ref :duct/logger)}
    ::mw/log-errors   {:logger (ig/ref :duct/logger)}
@@ -45,10 +50,9 @@
    {::core/handler {:middleware ^:distinct [(ig/ref ::mw/stacktrace)]}}})
 
 (def ^:private base-config
-  {::core/handler         {:router  (ig/ref :duct.router/cascading)}
-   :duct.router/cascading {:endpoints []}
-   :duct.server/http      {:handler (ig/ref ::core/handler)
-                           :logger  (ig/ref :duct/logger)}})
+  {::core/handler    {:router  (ig/ref :duct/router)}
+   :duct.server/http {:handler (ig/ref ::core/handler)
+                      :logger  (ig/ref :duct/logger)}})
 
 (def ^:private api-config
   {::mw/not-found   {:response (merge/displace "Resource Not Found")}
@@ -85,6 +89,7 @@
    :fn  (fn [config]
           (core/merge-configs config
                               (server-config config)
+                              (router-config config)
                               base-config
                               api-config
                               logging-config
@@ -95,6 +100,7 @@
    :fn  (fn [config]
           (core/merge-configs config
                               (server-config config)
+                              (router-config config)
                               base-config
                               (site-config (get-project-ns config options))
                               logging-config
