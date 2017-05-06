@@ -6,6 +6,7 @@
             [integrant.core :as ig]))
 
 (derive :duct.logger/fake :duct/logger)
+(derive :duct.server.http/fake :duct.server/http)
 
 (def api-config
   {:duct.core/project-ns  'foo
@@ -94,3 +95,12 @@
                  {:logger (ig/ref :duct/logger)}
                  :duct.middleware.web/log-errors
                  {:logger (ig/ref :duct/logger)}}))))
+
+(deftest http-server-test
+  (let [config  (assoc api-config :duct.server.http/fake {:port 8080})
+        prepped (core/prep config)]
+    (is (not (contains? prepped :duct.server.http/jetty)))
+    (is (= (:duct.server.http/fake prepped)
+           {:port    8080
+            :handler (ig/ref :duct.core/handler)
+            :logger  (ig/ref :duct/logger)}))))
