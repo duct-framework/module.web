@@ -34,7 +34,7 @@
 
 (defn- router-config [config]
   (if-not (ig/find-derived-1 config :duct/router)
-    {:duct.router/cascading {:endpoints []}}
+    {:duct.router/cascading []}
     {}))
 
 (def ^:private logging-config

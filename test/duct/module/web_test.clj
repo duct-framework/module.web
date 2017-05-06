@@ -24,7 +24,7 @@
 (deftest api-module-test
   (is (= (core/prep api-config)
          (merge api-config
-                {:duct.router/cascading {:endpoints []}
+                {:duct.router/cascading []
                  :duct.core/handler
                  {:router (ig/ref :duct/router)
                   :middleware
@@ -56,7 +56,7 @@
 (deftest site-module-test
   (is (= (core/prep site-config)
          (merge site-config
-                {:duct.router/cascading {:endpoints []}
+                {:duct.router/cascading []
                  :duct.core/handler
                  {:router (ig/ref :duct/router)
                   :middleware
