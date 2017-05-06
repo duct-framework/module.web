@@ -37,6 +37,13 @@ application:
 Note that the `:duct.core/project-ns` key must also be set, to allow
 the module to find the right resources.
 
+By default, the module uses the `:duct.server.http/jetty` key for the
+webserver, as supplied by the [server.http.jetty][] library. However,
+if a key deriving from `:duct.server/http` already exists in the
+configuration, the module will use that instead.
+
+[server.http.jetty]: https://github.com/duct-framework/server.http.jetty
+
 ## License
 
 Copyright © 2017 James Reeves
