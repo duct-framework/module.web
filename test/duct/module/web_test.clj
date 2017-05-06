@@ -22,8 +22,9 @@
 (deftest api-module-test
   (is (= (core/prep api-config)
          (merge api-config
-                {:duct.core.web/handler
-                 {:endpoints []
+                {:duct.router/cascading {:endpoints []}
+                 :duct.core/handler
+                 {:router (ig/ref :duct.router/cascading)
                   :middleware
                   [(ig/ref :duct.middleware.web/not-found)
                    (ig/ref :duct.middleware.web/defaults)
@@ -38,7 +39,7 @@
                               :default-charset "utf-8"}}
                  :duct.server.http/jetty
                  {:port 3000
-                  :handler (ig/ref :duct.core.web/handler)
+                  :handler (ig/ref :duct.core/handler)
                   :logger  (ig/ref :duct/logger)}
                  :duct.middleware.web/stacktrace {}
                  :duct.middleware.web/hide-errors
@@ -53,8 +54,9 @@
 (deftest site-module-test
   (is (= (core/prep site-config)
          (merge site-config
-                {:duct.core.web/handler
-                 {:endpoints []
+                {:duct.router/cascading {:endpoints []}
+                 :duct.core/handler
+                 {:router (ig/ref :duct.router/cascading)
                   :middleware
                   [(ig/ref :duct.middleware.web/not-found)
                    (ig/ref :duct.middleware.web/webjars)
@@ -80,7 +82,7 @@
                               :default-charset        "utf-8"}}
                  :duct.server.http/jetty
                  {:port 3000
-                  :handler (ig/ref :duct.core.web/handler)
+                  :handler (ig/ref :duct.core/handler)
                   :logger  (ig/ref :duct/logger)}
                  :duct.middleware.web/webjars {}
                  :duct.middleware.web/stacktrace {}

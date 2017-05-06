@@ -4,7 +4,7 @@
             [duct.core :as core]
             [duct.core.env :as env]
             [duct.core.merge :as merge]
-            [duct.core.web :as web]
+            [duct.router.cascading :as router]
             [duct.middleware.web :as mw]
             [integrant.core :as ig]
             [ring.middleware.defaults :as defaults]))
@@ -33,27 +33,30 @@
   {(http-server-key config) {:port (merge/displace server-port)}})
 
 (def ^:private logging-config
-  {::web/handler     {:middleware ^:distinct [(ig/ref ::mw/log-requests)
-                                              (ig/ref ::mw/log-errors)]}
-   ::mw/log-requests {:logger (ig/ref :duct/logger)}
-   ::mw/log-errors   {:logger (ig/ref :duct/logger)}})
+  {::mw/log-requests {:logger (ig/ref :duct/logger)}
+   ::mw/log-errors   {:logger (ig/ref :duct/logger)}
+   ::core/handler    {:middleware ^:distinct [(ig/ref ::mw/log-requests)
+                                              (ig/ref ::mw/log-errors)]}})
 
 (def ^:private error-configs
   {:production
-   {::web/handler {:middleware ^:distinct [(ig/ref ::mw/hide-errors)]}}
+   {::core/handler {:middleware ^:distinct [(ig/ref ::mw/hide-errors)]}}
    :development
-   {::web/handler {:middleware ^:distinct [(ig/ref ::mw/stacktrace)]}}})
+   {::core/handler {:middleware ^:distinct [(ig/ref ::mw/stacktrace)]}}})
+
+(def ^:private base-config
+  {::core/handler         {:router  (ig/ref :duct.router/cascading)}
+   :duct.router/cascading {:endpoints []}
+   :duct.server/http      {:handler (ig/ref ::core/handler)
+                           :logger  (ig/ref :duct/logger)}})
 
 (def ^:private api-config
-  {:duct.server/http {:handler (ig/ref ::web/handler)
-                      :logger  (ig/ref :duct/logger)}
-   ::web/handler     {:endpoints  []
-                      :middleware ^:distinct [(ig/ref ::mw/not-found)
-                                              (ig/ref ::mw/defaults)]}
-   ::mw/not-found    {:response (merge/displace "Resource Not Found")}
-   ::mw/hide-errors  {:response (merge/displace "Internal Server Error")}
-   ::mw/stacktrace   {}
-   ::mw/defaults     (merge/displace defaults/api-defaults)})
+  {::mw/not-found   {:response (merge/displace "Resource Not Found")}
+   ::mw/hide-errors {:response (merge/displace "Internal Server Error")}
+   ::mw/stacktrace  {}
+   ::mw/defaults    (merge/displace defaults/api-defaults)
+   ::core/handler   {:middleware ^:distinct [(ig/ref ::mw/not-found)
+                                             (ig/ref ::mw/defaults)]}})
 
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
 (def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
@@ -65,17 +68,14 @@
   (assoc-in defaults/site-defaults [:static :resources] (site-resource-paths project-ns)))
 
 (defn- site-config [project-ns]
-  {:duct.server/http {:handler (ig/ref ::web/handler)
-                      :logger  (ig/ref :duct/logger)}
-   ::web/handler     {:endpoints  []
-                      :middleware ^:distinct [(ig/ref ::mw/not-found)
-                                              (ig/ref ::mw/webjars)
-                                              (ig/ref ::mw/defaults)]}
-   ::mw/not-found    {:response (merge/displace error-404)}
-   ::mw/hide-errors  {:response (merge/displace error-500)}
-   ::mw/webjars      {}
-   ::mw/stacktrace   {}
-   ::mw/defaults     (merge/displace (site-defaults project-ns))})
+  {::mw/not-found   {:response (merge/displace error-404)}
+   ::mw/hide-errors {:response (merge/displace error-500)}
+   ::mw/webjars     {}
+   ::mw/stacktrace  {}
+   ::mw/defaults    (merge/displace (site-defaults project-ns))
+   ::core/handler   {:middleware ^:distinct [(ig/ref ::mw/not-found)
+                                             (ig/ref ::mw/webjars)
+                                             (ig/ref ::mw/defaults)]}})
 
 (derive ::api  :duct/module)
 (derive ::site :duct/module)
@@ -85,6 +85,7 @@
    :fn  (fn [config]
           (core/merge-configs config
                               (server-config config)
+                              base-config
                               api-config
                               logging-config
                               (error-configs (get-environment config options))))})
@@ -94,6 +95,7 @@
    :fn  (fn [config]
           (core/merge-configs config
                               (server-config config)
+                              base-config
                               (site-config (get-project-ns config options))
                               logging-config
                               (error-configs (get-environment config options))))})
