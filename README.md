@@ -7,7 +7,6 @@ configuration. This is the basis of all web applications built with
 Duct.
 
 [duct]: https://github.com/duct-framework/duct
-[logger.timbre]: https://github.com/duct-framework/logger.timbre
 
 ## Installation
 
