@@ -1,3 +1,9 @@
+## 0.3.0 (2017-05-07)
+
+* **BREAKING CHANGE** `:duct.core.web/handler` key replaced by `:duct.core/handler`
+* Updated module to look for `:duct/router` key for routes
+* Added `:duct.router/cascading` key
+
 ## 0.2.1 (2017-05-04)
 
 * Updated Ring to 1.6.0
