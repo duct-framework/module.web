@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [duct/core "0.3.2"]
                  [duct/logger "0.1.1"]
-                 [duct/server.http.jetty "0.1.3"]
+                 [duct/server.http.jetty "0.1.4"]
                  [compojure "1.6.0"]
                  [integrant "0.4.0"]
                  [org.slf4j/slf4j-nop "1.7.21"]
