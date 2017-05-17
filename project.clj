@@ -11,8 +11,8 @@
                  [integrant "0.4.0"]
                  [org.slf4j/slf4j-nop "1.7.21"]
                  [org.webjars/normalize.css "5.0.0"]
-                 [ring/ring-core "1.6.0"]
-                 [ring/ring-devel "1.6.0"]
+                 [ring/ring-core "1.6.1"]
+                 [ring/ring-devel "1.6.1"]
                  [ring/ring-defaults "0.3.0"]
                  [ring-webjars "0.2.0"]]
   :profiles
