@@ -58,14 +58,18 @@
                       :logger  (ig/ref :duct/logger)}})
 
 (def ^:private api-config
-  {::err/not-found      {:response (merge/displace "Resource Not Found")}
-   ::err/internal-error {:response (merge/displace "Internal Server Error")}
-   ::mw/stacktrace      {}
-   ::mw/defaults        (merge/displace defaults/api-defaults)
-   ::core/handler       {:middleware ^:distinct [(ig/ref ::mw/not-found)
-                                                 (ig/ref ::mw/defaults)]}})
+  {::err/bad-request        {:response (merge/displace "Bad Request")}
+   ::err/not-found          {:response (merge/displace "Resource Not Found")}
+   ::err/method-not-allowed {:response (merge/displace "Method Not Allowed")}
+   ::err/internal-error     {:response (merge/displace "Internal Server Error")}
+   ::mw/stacktrace          {}
+   ::mw/defaults            (merge/displace defaults/api-defaults)
+   ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/not-found)
+                                                     (ig/ref ::mw/defaults)]}})
 
+(def ^:private error-400 (io/resource "duct/module/web/errors/400.html"))
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
+(def ^:private error-405 (io/resource "duct/module/web/errors/405.html"))
 (def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
 
 (defn- site-resource-paths [project-ns]
@@ -75,14 +79,16 @@
   (assoc-in defaults/site-defaults [:static :resources] (site-resource-paths project-ns)))
 
 (defn- site-config [project-ns]
-  {::err/not-found      {:response (merge/displace error-404)}
-   ::err/internal-error {:response (merge/displace error-500)}
-   ::mw/webjars         {}
-   ::mw/stacktrace      {}
-   ::mw/defaults        (merge/displace (site-defaults project-ns))
-   ::core/handler       {:middleware ^:distinct [(ig/ref ::mw/not-found)
-                                                 (ig/ref ::mw/webjars)
-                                                 (ig/ref ::mw/defaults)]}})
+  {::err/bad-request        {:response (merge/displace error-400)}
+   ::err/not-found          {:response (merge/displace error-404)}
+   ::err/method-not-allowed {:response (merge/displace error-405)}
+   ::err/internal-error     {:response (merge/displace error-500)}
+   ::mw/webjars             {}
+   ::mw/stacktrace          {}
+   ::mw/defaults            (merge/displace (site-defaults project-ns))
+   ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/not-found)
+                                                     (ig/ref ::mw/webjars)
+                                                     (ig/ref ::mw/defaults)]}})
 
 (derive ::api  :duct/module)
 (derive ::site :duct/module)
