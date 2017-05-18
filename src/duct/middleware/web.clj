@@ -49,10 +49,11 @@
             (response/content-type "text/html")
             (response/status 404)))))
 
-(defn wrap-route-aliases [handler aliases]
+(defn wrap-route-aliases
   "Middleware that takes a map of URI aliases. If the URI of the request matches
   a URI in the map's keys, the URI is changed to the value corresponding to that
   key."
+  [handler aliases]
   (fn [request]
     (if-let [alias (aliases (:uri request))]
       (handler (assoc request :uri alias))
