@@ -43,11 +43,15 @@
                  {:port 3000
                   :handler (ig/ref :duct.core/handler)
                   :logger  (ig/ref :duct/logger)}
+                 :duct.handler.error/internal-error
+                 {:response "Internal Server Error"}
+                 :duct.handler.error/not-found
+                 {:response "Resource Not Found"}
                  :duct.middleware.web/stacktrace {}
                  :duct.middleware.web/hide-errors
-                 {:response "Internal Server Error"}
+                 {:error-handler (ig/ref :duct.handler.error/internal-error)}
                  :duct.middleware.web/not-found
-                 {:response "Resource Not Found"}
+                 {:error-handler (ig/ref :duct.handler.error/not-found)}
                  :duct.middleware.web/log-requests
                  {:logger (ig/ref :duct/logger)}
                  :duct.middleware.web/log-errors
@@ -88,10 +92,14 @@
                   :logger  (ig/ref :duct/logger)}
                  :duct.middleware.web/webjars {}
                  :duct.middleware.web/stacktrace {}
-                 :duct.middleware.web/hide-errors
+                 :duct.handler.error/internal-error
                  {:response (io/resource "duct/module/web/errors/500.html")}
-                 :duct.middleware.web/not-found
+                 :duct.handler.error/not-found
                  {:response (io/resource "duct/module/web/errors/404.html")}
+                 :duct.middleware.web/hide-errors
+                 {:error-handler (ig/ref :duct.handler.error/internal-error)}
+                 :duct.middleware.web/not-found
+                 {:error-handler (ig/ref :duct.handler.error/not-found)}
                  :duct.middleware.web/log-requests
                  {:logger (ig/ref :duct/logger)}
                  :duct.middleware.web/log-errors

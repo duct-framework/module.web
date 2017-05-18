@@ -50,16 +50,22 @@
         (is (= @raise ex))
         (is (= @logs [[:error :duct.middleware.web/handler-error ex]]))))))
 
+(defn- make-error-handler [message]
+  (fn handler
+    ([_] {:headers {}, :body message})
+    ([_ respond _] (respond {:headers {}, :body message}))))
+
 (deftest test-wrap-hide-errors
-  (let [response {:status 500, :headers {"Content-Type" "text/html"} :body "Internal Error"}]
+  (let [err-handler (make-error-handler "Internal Error")
+        response    {:status 500, :headers {} :body "Internal Error"}]
     (testing "synchronous"
       (let [handler (-> (fn [_] (throw (Exception. "testing")))
-                        (wrap-hide-errors "Internal Error"))]
+                        (wrap-hide-errors err-handler))]
         (is (= (handler (mock/request :get "/")) response))))
 
     (testing "asynchronous"
       (let [handler (-> (fn [_ _ raise] (raise (Exception. "testing")))
-                        (wrap-hide-errors "Internal Error"))
+                        (wrap-hide-errors err-handler))
             respond (promise)
             raise   (promise)]
         (handler (mock/request :get "/") respond raise)
@@ -67,13 +73,14 @@
         (is (= @respond response))))))
 
 (deftest test-wrap-not-found
-  (let [response {:status 404, :headers {"Content-Type" "text/html"} :body "Not Found"}]
+  (let [err-handler (make-error-handler "Not Found")
+        response    {:status 404, :headers {},  :body "Not Found"}]
     (testing "synchronous"
-      (let [handler (wrap-not-found (constantly nil) "Not Found")]
+      (let [handler (wrap-not-found (constantly nil) err-handler)]
         (is (= (handler (mock/request :get "/")) response))))
 
     (testing "asynchronous"
-      (let [handler (wrap-not-found (fn [_ respond _] (respond nil)) "Not Found")
+      (let [handler (wrap-not-found (fn [_ respond _] (respond nil)) err-handler)
             respond (promise)
             raise   (promise)]
         (handler (mock/request :get "/") respond raise)
