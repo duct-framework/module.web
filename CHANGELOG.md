@@ -1,3 +1,11 @@
+## 0.4.0 (2017-05-22)
+
+* **BREAKING CHANGE** Changed `wrap-not-found` to take handler argument
+* **BREAKING CHANGE** Changed `wrap-hide-errors` to take handler argument
+* Added `duct.handler.error` namespace
+* Added async support to middleware functions
+* Updated `duct/server.http.jetty` to support async Ring
+
 ## 0.3.0 (2017-05-07)
 
 * **BREAKING CHANGE** `:duct.core.web/handler` key replaced by `:duct.core/handler`
