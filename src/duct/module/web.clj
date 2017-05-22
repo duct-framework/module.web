@@ -53,6 +53,7 @@
 (def ^:private base-config
   {::mw/not-found    ^:displace {:error-handler (ig/ref ::err/not-found)}
    ::mw/hide-errors  ^:displace {:error-handler (ig/ref ::err/internal-error)}
+   ::mw/stacktrace   {}
    ::core/handler    {:router  (merge/displace (ig/ref :duct/router))}
    :duct.server/http {:handler (merge/displace (ig/ref ::core/handler))
                       :logger  (merge/displace (ig/ref :duct/logger))}})
@@ -62,7 +63,6 @@
    ::err/not-found          ^:displace {:response (merge/displace "Resource Not Found")}
    ::err/method-not-allowed ^:displace {:response (merge/displace "Method Not Allowed")}
    ::err/internal-error     ^:displace {:response (merge/displace "Internal Server Error")}
-   ::mw/stacktrace          {}
    ::mw/defaults            (merge/displace defaults/api-defaults)
    ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/not-found)
                                                      (ig/ref ::mw/defaults)]}})
@@ -84,7 +84,6 @@
    ::err/method-not-allowed {:response (merge/displace error-405)}
    ::err/internal-error     {:response (merge/displace error-500)}
    ::mw/webjars             {}
-   ::mw/stacktrace          {}
    ::mw/defaults            (merge/displace (site-defaults project-ns))
    ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/not-found)
                                                      (ig/ref ::mw/webjars)
