@@ -51,18 +51,18 @@
    {::core/handler {:middleware ^:distinct [(ig/ref ::mw/stacktrace)]}}})
 
 (def ^:private base-config
-  {::mw/not-found    ^:displace {:error-handler (ig/ref ::err/not-found)}
-   ::mw/hide-errors  ^:displace {:error-handler (ig/ref ::err/internal-error)}
+  {::mw/not-found    {:error-handler (merge/displace (ig/ref ::err/not-found))}
+   ::mw/hide-errors  {:error-handler (merge/displace (ig/ref ::err/internal-error))}
    ::mw/stacktrace   {}
    ::core/handler    {:router  (merge/displace (ig/ref :duct/router))}
    :duct.server/http {:handler (merge/displace (ig/ref ::core/handler))
                       :logger  (merge/displace (ig/ref :duct/logger))}})
 
 (def ^:private api-config
-  {::err/bad-request        ^:displace {:response (merge/displace "Bad Request")}
-   ::err/not-found          ^:displace {:response (merge/displace "Resource Not Found")}
-   ::err/method-not-allowed ^:displace {:response (merge/displace "Method Not Allowed")}
-   ::err/internal-error     ^:displace {:response (merge/displace "Internal Server Error")}
+  {::err/bad-request        {:response (merge/displace "Bad Request")}
+   ::err/not-found          {:response (merge/displace "Resource Not Found")}
+   ::err/method-not-allowed {:response (merge/displace "Method Not Allowed")}
+   ::err/internal-error     {:response (merge/displace "Internal Server Error")}
    ::mw/defaults            (merge/displace defaults/api-defaults)
    ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/not-found)
                                                      (ig/ref ::mw/defaults)]}})
