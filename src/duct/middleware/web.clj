@@ -1,10 +1,13 @@
 (ns duct.middleware.web
   (:require [duct.logger :as logger]
             [integrant.core :as ig]
+            [muuntaja.core :as mc]
+            [muuntaja.middleware :as mm]
             [ring.middleware.defaults :refer [wrap-defaults]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
             [ring.middleware.webjars :refer [wrap-webjars]]
-            [ring.util.response :as response]))
+            [ring.util.response :as response]
+            [duct.core.merge :as merge]))
 
 (def ^:private request-log-keys
   [:request-method :uri :query-string])
@@ -114,3 +117,6 @@
 
 (defmethod ig/init-key ::stacktrace [_ options]
   #(wrap-stacktrace % options))
+
+(defmethod ig/init-key ::format [_ options]
+  #(mm/wrap-format % (merge-with merge mc/default-options options)))

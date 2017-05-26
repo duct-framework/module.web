@@ -50,7 +50,7 @@
    :development
    {::core/handler {:middleware ^:distinct [(ig/ref ::mw/stacktrace)]}}})
 
-(def ^:private base-config
+(def ^:private common-config
   {::mw/not-found    {:error-handler (merge/displace (ig/ref ::err/not-found))}
    ::mw/hide-errors  {:error-handler (merge/displace (ig/ref ::err/internal-error))}
    ::mw/stacktrace   {}
@@ -58,13 +58,24 @@
    :duct.server/http {:handler (merge/displace (ig/ref ::core/handler))
                       :logger  (merge/displace (ig/ref :duct/logger))}})
 
-(def ^:private api-config
+(def ^:private base-config
   {::err/bad-request        {:response (merge/displace "Bad Request")}
    ::err/not-found          {:response (merge/displace "Resource Not Found")}
    ::err/method-not-allowed {:response (merge/displace "Method Not Allowed")}
    ::err/internal-error     {:response (merge/displace "Internal Server Error")}
    ::mw/defaults            (merge/displace defaults/api-defaults)
    ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/not-found)
+                                                     (ig/ref ::mw/defaults)]}})
+
+(def ^:private api-config
+  {::err/bad-request        {:response (merge/displace {:body {:error :bad-request}})}
+   ::err/not-found          {:response (merge/displace {:body {:error :not-found}})}
+   ::err/method-not-allowed {:response (merge/displace {:body {:error :method-not-allowed}})}
+   ::err/internal-error     {:response (merge/displace {:body {:error :internal-error}})}
+   ::mw/format              {}
+   ::mw/defaults            (merge/displace defaults/api-defaults)
+   ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/format)
+                                                     (ig/ref ::mw/not-found)
                                                      (ig/ref ::mw/defaults)]}})
 
 (def ^:private error-400 (io/resource "duct/module/web/errors/400.html"))
@@ -92,13 +103,24 @@
 (derive ::api  :duct/module)
 (derive ::site :duct/module)
 
+(defmethod ig/init-key :duct.module/web [_ options]
+  {:req #{:duct/logger}
+   :fn  (fn [config]
+          (core/merge-configs config
+                              (server-config config)
+                              (router-config config)
+                              common-config
+                              base-config
+                              logging-config
+                              (error-configs (get-environment config options))))})
+
 (defmethod ig/init-key ::api [_ options]
   {:req #{:duct/logger}
    :fn  (fn [config]
           (core/merge-configs config
                               (server-config config)
                               (router-config config)
-                              base-config
+                              common-config
                               api-config
                               logging-config
                               (error-configs (get-environment config options))))})
