@@ -9,6 +9,12 @@
 (derive :duct.router/fake :duct/router)
 (derive :duct.server.http/fake :duct.server/http)
 
+(def base-config
+  {:duct.core/project-ns  'foo
+   :duct.core/environment :production
+   :duct.logger/fake      {}
+   :duct.module/web       {}})
+
 (def api-config
   {:duct.core/project-ns  'foo
    :duct.core/environment :production
@@ -20,6 +26,50 @@
    :duct.core/environment :production
    :duct.logger/fake      {}
    :duct.module.web/site  {}})
+
+(deftest base-module-test
+  (is (= (core/prep base-config)
+         (merge base-config
+                {:duct.router/cascading []
+                 :duct.core/handler
+                 {:router (ig/ref :duct/router)
+                  :middleware
+                  [(ig/ref :duct.middleware.web/not-found)
+                   (ig/ref :duct.middleware.web/defaults)
+                   (ig/ref :duct.middleware.web/log-requests)
+                   (ig/ref :duct.middleware.web/log-errors)
+                   (ig/ref :duct.middleware.web/hide-errors)]}
+                 :duct.middleware.web/defaults
+                 {:params    {:urlencoded true, :keywordize true}
+                  :responses {:not-modified-responses true
+                              :absolute-redirects true
+                              :content-types true
+                              :default-charset "utf-8"}}
+                 :duct.server.http/jetty
+                 {:port 3000
+                  :handler (ig/ref :duct.core/handler)
+                  :logger  (ig/ref :duct/logger)}
+                 :duct.handler.static/bad-request
+                 {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+                  :body "Bad Request"}
+                 :duct.handler.static/not-found
+                 {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+                  :body "Not Found"}
+                 :duct.handler.static/method-not-allowed
+                 {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+                  :body "Method Not Allowed"}
+                 :duct.handler.static/internal-server-error
+                 {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+                  :body "Internal Server Error"}
+                 :duct.middleware.web/stacktrace {}
+                 :duct.middleware.web/hide-errors
+                 {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
+                 :duct.middleware.web/not-found
+                 {:error-handler (ig/ref :duct.handler.static/not-found)}
+                 :duct.middleware.web/log-requests
+                 {:logger (ig/ref :duct/logger)}
+                 :duct.middleware.web/log-errors
+                 {:logger (ig/ref :duct/logger)}}))))
 
 (deftest api-module-test
   (is (= (core/prep api-config)
