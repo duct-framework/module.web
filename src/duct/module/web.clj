@@ -68,7 +68,7 @@
 
 (def ^:private base-config
   {::static/bad-request           (plaintext-response "Bad Request")
-   ::static/not-found             (plaintext-response "Resource Not Found")
+   ::static/not-found             (plaintext-response "Not Found")
    ::static/method-not-allowed    (plaintext-response "Method Not Allowed")
    ::static/internal-server-error (plaintext-response "Internal Server Error")
    ::mw/defaults                  (merge/displace defaults/api-defaults)
