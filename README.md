@@ -32,6 +32,9 @@ application:
  :duct.module.web/site {}}
 ```
 
+Or `:duct.module/web` if you want the bare-bones approach and want to
+handle most things yourself.
+
 Note that the `:duct.core/project-ns` key must also be set, to allow
 the module to find the right resources.
 
@@ -40,7 +43,7 @@ webserver, as supplied by the [server.http.jetty][] library. However,
 if a key deriving from `:duct.server/http` already exists in the
 configuration, the module will use that instead.
 
-Similarly, the module adds the `:duct.router/cascading` key for
+Similarly, the module includes the `:duct.router/cascading` key for
 routing. This is a simple router that takes an ordered vector of
 handlers, and will return the first non-nil response for a given
 request.
