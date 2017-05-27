@@ -1,3 +1,9 @@
+## 0.5.0 (2017-05-27)
+
+* **BREAKING CHANGE** Replaced `duct.handler.error` with `duct.handler.static`
+* Added Muuntaja for content negotiation to `:duct.module.web/api`
+* Added `:duct.module/web` for bare-bones web development
+
 ## 0.4.0 (2017-05-22)
 
 * **BREAKING CHANGE** Changed `wrap-not-found` to take handler argument
