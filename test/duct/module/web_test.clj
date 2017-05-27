@@ -29,6 +29,7 @@
                  {:router (ig/ref :duct/router)
                   :middleware
                   [(ig/ref :duct.middleware.web/not-found)
+                   (ig/ref :duct.middleware.web/format)
                    (ig/ref :duct.middleware.web/defaults)
                    (ig/ref :duct.middleware.web/log-requests)
                    (ig/ref :duct.middleware.web/log-errors)
@@ -43,19 +44,20 @@
                  {:port 3000
                   :handler (ig/ref :duct.core/handler)
                   :logger  (ig/ref :duct/logger)}
-                 :duct.handler.error/bad-request
-                 {:response "Bad Request"}
-                 :duct.handler.error/not-found
-                 {:response "Resource Not Found"}
-                 :duct.handler.error/method-not-allowed
-                 {:response "Method Not Allowed"}
-                 :duct.handler.error/internal-error
-                 {:response "Internal Server Error"}
+                 :duct.handler.static/bad-request
+                 {:body {:error :bad-request}}
+                 :duct.handler.static/not-found
+                 {:body {:error :not-found}}
+                 :duct.handler.static/method-not-allowed
+                 {:body {:error :method-not-allowed}}
+                 :duct.handler.static/internal-server-error
+                 {:body {:error :internal-server-error}}
+                 :duct.middleware.web/format {}
                  :duct.middleware.web/stacktrace {}
                  :duct.middleware.web/hide-errors
-                 {:error-handler (ig/ref :duct.handler.error/internal-error)}
+                 {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
                  :duct.middleware.web/not-found
-                 {:error-handler (ig/ref :duct.handler.error/not-found)}
+                 {:error-handler (ig/ref :duct.handler.static/not-found)}
                  :duct.middleware.web/log-requests
                  {:logger (ig/ref :duct/logger)}
                  :duct.middleware.web/log-errors
@@ -96,18 +98,22 @@
                   :logger  (ig/ref :duct/logger)}
                  :duct.middleware.web/webjars {}
                  :duct.middleware.web/stacktrace {}
-                 :duct.handler.error/bad-request
-                 {:response (io/resource "duct/module/web/errors/400.html")}
-                 :duct.handler.error/not-found
-                 {:response (io/resource "duct/module/web/errors/404.html")}
-                 :duct.handler.error/method-not-allowed
-                 {:response (io/resource "duct/module/web/errors/405.html")}
-                 :duct.handler.error/internal-error
-                 {:response (io/resource "duct/module/web/errors/500.html")}
+                 :duct.handler.static/bad-request
+                 {:headers {"Content-Type" "text/html; charset=UTF-8"}
+                  :body (io/resource "duct/module/web/errors/400.html")}
+                 :duct.handler.static/not-found
+                 {:headers {"Content-Type" "text/html; charset=UTF-8"}
+                  :body (io/resource "duct/module/web/errors/404.html")}
+                 :duct.handler.static/method-not-allowed
+                 {:headers {"Content-Type" "text/html; charset=UTF-8"}
+                  :body (io/resource "duct/module/web/errors/405.html")}
+                 :duct.handler.static/internal-server-error
+                 {:headers {"Content-Type" "text/html; charset=UTF-8"}
+                  :body (io/resource "duct/module/web/errors/500.html")}
                  :duct.middleware.web/hide-errors
-                 {:error-handler (ig/ref :duct.handler.error/internal-error)}
+                 {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
                  :duct.middleware.web/not-found
-                 {:error-handler (ig/ref :duct.handler.error/not-found)}
+                 {:error-handler (ig/ref :duct.handler.static/not-found)}
                  :duct.middleware.web/log-requests
                  {:logger (ig/ref :duct/logger)}
                  :duct.middleware.web/log-errors
