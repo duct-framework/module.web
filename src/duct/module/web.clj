@@ -4,7 +4,7 @@
             [duct.core :as core]
             [duct.core.env :as env]
             [duct.core.merge :as merge]
-            [duct.handler.error :as err]
+            [duct.handler.static :as static]
             [duct.middleware.web :as mw]
             [duct.router.cascading :as router]
             [integrant.core :as ig]
@@ -51,32 +51,40 @@
    {::core/handler {:middleware ^:distinct [(ig/ref ::mw/stacktrace)]}}})
 
 (def ^:private common-config
-  {::mw/not-found    {:error-handler (merge/displace (ig/ref ::err/not-found))}
-   ::mw/hide-errors  {:error-handler (merge/displace (ig/ref ::err/internal-error))}
+  {::mw/not-found    {:error-handler (merge/displace (ig/ref ::static/not-found))}
+   ::mw/hide-errors  {:error-handler (merge/displace (ig/ref ::static/internal-server-error))}
    ::mw/stacktrace   {}
    ::core/handler    {:router  (merge/displace (ig/ref :duct/router))}
    :duct.server/http {:handler (merge/displace (ig/ref ::core/handler))
                       :logger  (merge/displace (ig/ref :duct/logger))}})
 
+(defn- plaintext-response [text]
+  {:headers {"Content-Type" (merge/displace "text/plain; charset=UTF-8")}
+   :body    (merge/displace text)})
+
+(defn- html-response [html]
+  {:headers {"Content-Type" (merge/displace "text/html; charset=UTF-8")}
+   :body    (merge/displace html)})
+
 (def ^:private base-config
-  {::err/bad-request        {:response (merge/displace "Bad Request")}
-   ::err/not-found          {:response (merge/displace "Resource Not Found")}
-   ::err/method-not-allowed {:response (merge/displace "Method Not Allowed")}
-   ::err/internal-error     {:response (merge/displace "Internal Server Error")}
-   ::mw/defaults            (merge/displace defaults/api-defaults)
-   ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/not-found)
-                                                     (ig/ref ::mw/defaults)]}})
+  {::static/bad-request           (plaintext-response "Bad Request")
+   ::static/not-found             (plaintext-response "Resource Not Found")
+   ::static/method-not-allowed    (plaintext-response "Method Not Allowed")
+   ::static/internal-server-error (plaintext-response "Internal Server Error")
+   ::mw/defaults                  (merge/displace defaults/api-defaults)
+   ::core/handler                 {:middleware ^:distinct [(ig/ref ::mw/not-found)
+                                                           (ig/ref ::mw/defaults)]}})
 
 (def ^:private api-config
-  {::err/bad-request        {:response (merge/displace {:body {:error :bad-request}})}
-   ::err/not-found          {:response (merge/displace {:body {:error :not-found}})}
-   ::err/method-not-allowed {:response (merge/displace {:body {:error :method-not-allowed}})}
-   ::err/internal-error     {:response (merge/displace {:body {:error :internal-error}})}
-   ::mw/format              {}
-   ::mw/defaults            (merge/displace defaults/api-defaults)
-   ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/format)
-                                                     (ig/ref ::mw/not-found)
-                                                     (ig/ref ::mw/defaults)]}})
+  {::static/bad-request           {:body (merge/displace {:error :bad-request})}
+   ::static/not-found             {:body (merge/displace {:error :not-found})}
+   ::static/method-not-allowed    {:body (merge/displace {:error :method-not-allowed})}
+   ::static/internal-server-error {:body (merge/displace {:error :internal-server-error})}
+   ::mw/format                    {}
+   ::mw/defaults                  (merge/displace defaults/api-defaults)
+   ::core/handler                 {:middleware ^:distinct [(ig/ref ::mw/not-found)
+                                                           (ig/ref ::mw/format)
+                                                           (ig/ref ::mw/defaults)]}})
 
 (def ^:private error-400 (io/resource "duct/module/web/errors/400.html"))
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
@@ -90,15 +98,15 @@
   (assoc-in defaults/site-defaults [:static :resources] (site-resource-paths project-ns)))
 
 (defn- site-config [project-ns]
-  {::err/bad-request        {:response (merge/displace error-400)}
-   ::err/not-found          {:response (merge/displace error-404)}
-   ::err/method-not-allowed {:response (merge/displace error-405)}
-   ::err/internal-error     {:response (merge/displace error-500)}
-   ::mw/webjars             {}
-   ::mw/defaults            (merge/displace (site-defaults project-ns))
-   ::core/handler           {:middleware ^:distinct [(ig/ref ::mw/not-found)
-                                                     (ig/ref ::mw/webjars)
-                                                     (ig/ref ::mw/defaults)]}})
+  {::static/bad-request           (html-response error-400)
+   ::static/not-found             (html-response error-404)
+   ::static/method-not-allowed    (html-response error-405)
+   ::static/internal-server-error (html-response error-500)
+   ::mw/webjars                   {}
+   ::mw/defaults                  (merge/displace (site-defaults project-ns))
+   ::core/handler                 {:middleware ^:distinct [(ig/ref ::mw/not-found)
+                                                           (ig/ref ::mw/webjars)
+                                                           (ig/ref ::mw/defaults)]}})
 
 (derive ::api  :duct/module)
 (derive ::site :duct/module)
@@ -131,7 +139,7 @@
           (core/merge-configs config
                               (server-config config)
                               (router-config config)
-                              base-config
+                              common-config
                               (site-config (get-project-ns config options))
                               logging-config
                               (error-configs (get-environment config options))))})
