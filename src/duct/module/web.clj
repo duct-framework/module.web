@@ -108,8 +108,9 @@
                                                            (ig/ref ::mw/webjars)
                                                            (ig/ref ::mw/defaults)]}})
 
-(derive ::api  :duct/module)
-(derive ::site :duct/module)
+(derive :duct.module/web :duct/module)
+(derive ::api            :duct/module)
+(derive ::site           :duct/module)
 
 (defmethod ig/init-key :duct.module/web [_ options]
   {:req #{:duct/logger}
