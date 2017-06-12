@@ -1,17 +1,46 @@
 (ns duct.handler.static
   (:require [clojure.java.io :as io]
             [integrant.core :as ig]
-            [ring.core.protocols :as p]))
+            [ring.util.mime-type :as mime]
+            [ring.util.response :as resp]))
 
-(extend-protocol p/StreamableResponseBody
+(defn- merge-response [a b]
+  (-> a (assoc :body (:body b))
+        (update :headers (partial merge (:headers b)))))
+
+(defn- guess-content-type [response name]
+  (if-let [mime-type (mime/ext-mime-type (str name))]
+    (resp/content-type response mime-type)
+    response))
+
+(defprotocol ResponseBody
+  (update-response [body response]))
+
+(extend-protocol ResponseBody
+  nil
+  (update-response [_ response] (assoc response :body nil))
+  String
+  (update-response [s response] (assoc response :body s))
+  java.io.InputStream
+  (update-response [is response] (assoc response :body is))
+  java.io.File
+  (update-response [f response]
+    (if-let [r (resp/file-response (str f))]
+      (-> response (merge-response r) (guess-content-type (str f)))
+      (assoc response :body nil)))
   java.net.URL
-  (write-body-to-stream [url response stream]
-    (p/write-body-to-stream (io/input-stream url) response stream)))
+  (update-response [url response]
+    (if-let [r (resp/url-response url)]
+      (-> response (merge-response r) (guess-content-type (str url)))
+      (assoc response :body nil))))
+
+(defn- ring-response [response]
+  (update-response (:body response) response))
 
 (defn- make-handler [response]
   (fn
-    ([_] response)
-    ([_ respond _] (respond response))))
+    ([_] (ring-response response))
+    ([_ respond _] (respond (ring-response response)))))
 
 (defmethod ig/init-key :duct.handler/static [_ response]
   (make-handler response))
