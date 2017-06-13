@@ -1,3 +1,8 @@
+## 0.5.1 (2017-06-13)
+
+* Updated static handlers to add headers automatically for file and URL bodies
+* Updated static handlers so URL bodies work with older Ring adapters
+
 ## 0.5.0 (2017-05-27)
 
 * **BREAKING CHANGE** Replaced `duct.handler.error` with `duct.handler.static`
