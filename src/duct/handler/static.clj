@@ -18,11 +18,9 @@
 
 (extend-protocol ResponseBody
   nil
-  (update-response [_ response] (assoc response :body nil))
-  String
-  (update-response [s response] (assoc response :body s))
-  java.io.InputStream
-  (update-response [is response] (assoc response :body is))
+  (update-response [_ response] response)
+  Object
+  (update-response [_ response] response)
   java.io.File
   (update-response [f response]
     (if-let [r (resp/file-response (str f))]

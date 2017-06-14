@@ -29,7 +29,11 @@
       (is (= (get-in response [:headers "Content-Type"]) "text/plain"))
       (is (= (get-in response [:headers "Content-Length"]) "4"))
       (is (string? (get-in response [:headers "Last-Modified"])))
-      (is (= (slurp (:body response)) "foo\n")))))
+      (is (= (slurp (:body response)) "foo\n"))))
+
+  (testing "non-standard body"
+    (let [handler (ig/init-key :duct.handler/static {:body {:a 1}})]
+      (is (= (handler {}) {:body {:a 1}})))))
 
 (deftest test-response-statuses
   (testing "200 OK"
