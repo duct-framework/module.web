@@ -1,3 +1,7 @@
+## 0.5.2 (2017-06-14)
+
+* Fixed bug with static handlers and non-standard response bodies
+
 ## 0.5.1 (2017-06-13)
 
 * Updated static handlers to add headers automatically for file and URL bodies
