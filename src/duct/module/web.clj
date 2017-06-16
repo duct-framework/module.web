@@ -112,35 +112,23 @@
 (derive ::api            :duct/module)
 (derive ::site           :duct/module)
 
+(defn- apply-web-module [config options module-config]
+  (core/merge-configs config
+                      (server-config config)
+                      (router-config config)
+                      common-config
+                      module-config
+                      logging-config
+                      (error-configs (get-environment config options))))
+
 (defmethod ig/init-key :duct.module/web [_ options]
   {:req #{:duct/logger}
-   :fn  (fn [config]
-          (core/merge-configs config
-                              (server-config config)
-                              (router-config config)
-                              common-config
-                              base-config
-                              logging-config
-                              (error-configs (get-environment config options))))})
+   :fn  #(apply-web-module % options base-config)})
 
 (defmethod ig/init-key ::api [_ options]
   {:req #{:duct/logger}
-   :fn  (fn [config]
-          (core/merge-configs config
-                              (server-config config)
-                              (router-config config)
-                              common-config
-                              api-config
-                              logging-config
-                              (error-configs (get-environment config options))))})
+   :fn  #(apply-web-module % options api-config)})
 
 (defmethod ig/init-key ::site [_ options]
   {:req #{:duct/logger}
-   :fn  (fn [config]
-          (core/merge-configs config
-                              (server-config config)
-                              (router-config config)
-                              common-config
-                              (site-config (get-project-ns config options))
-                              logging-config
-                              (error-configs (get-environment config options))))})
+   :fn  #(apply-web-module % options (site-config (get-project-ns % options)))})
