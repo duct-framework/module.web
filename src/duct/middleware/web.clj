@@ -118,5 +118,11 @@
 (defmethod ig/init-key ::stacktrace [_ options]
   #(wrap-stacktrace % options))
 
+(defn- deep-merge
+  [a b]
+  (if (and (map? a) (map b))
+    (merge-with deep-merge a b)
+    b))
+
 (defmethod ig/init-key ::format [_ options]
-  #(mm/wrap-format % (merge-with merge mc/default-options options)))
+  #(mm/wrap-format % (deep-merge mc/default-options options)))
