@@ -183,3 +183,23 @@
         prepped (core/prep config)]
     (is (not (contains? prepped :duct.router/cascading)))
     (is (= (:duct.router/fake prepped) {}))))
+
+(deftest ring-defaults-test
+  (testing "api config"
+    (let [config  (assoc api-config
+                         :duct.middleware.web/defaults
+                         {:params {:keywordize false}})
+        prepped (core/prep config)]
+    (is (= (:params (:duct.middleware.web/defaults prepped))
+           {:urlencoded true
+            :keywordize false}))))
+  (testing "site config"
+    (let [config  (assoc site-config
+                         :duct.middleware.web/defaults
+                         {:params {:multipart false}})
+          prepped (core/prep config)]
+      (is (= (:params (:duct.middleware.web/defaults prepped))
+             {:urlencoded true
+              :multipart  false
+              :nested     true
+              :keywordize true})))))

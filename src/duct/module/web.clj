@@ -59,29 +59,27 @@
                       :logger  (merge/displace (ig/ref :duct/logger))}})
 
 (defn- plaintext-response [text]
-  {:headers {"Content-Type" (merge/displace "text/plain; charset=UTF-8")}
-   :body    (merge/displace text)})
+  ^:demote {:headers {"Content-Type" "text/plain; charset=UTF-8"}, :body text})
 
 (defn- html-response [html]
-  {:headers {"Content-Type" (merge/displace "text/html; charset=UTF-8")}
-   :body    (merge/displace html)})
+  ^:demote {:headers {"Content-Type" "text/html; charset=UTF-8"}, :body html})
 
 (def ^:private base-config
   {::static/bad-request           (plaintext-response "Bad Request")
    ::static/not-found             (plaintext-response "Not Found")
    ::static/method-not-allowed    (plaintext-response "Method Not Allowed")
    ::static/internal-server-error (plaintext-response "Internal Server Error")
-   ::mw/defaults                  (merge/displace defaults/api-defaults)
+   ::mw/defaults                  (with-meta defaults/api-defaults {:demote true})
    ::core/handler                 {:middleware ^:distinct [(ig/ref ::mw/not-found)
                                                            (ig/ref ::mw/defaults)]}})
 
 (def ^:private api-config
-  {::static/bad-request           {:body (merge/displace {:error :bad-request})}
-   ::static/not-found             {:body (merge/displace {:error :not-found})}
-   ::static/method-not-allowed    {:body (merge/displace {:error :method-not-allowed})}
-   ::static/internal-server-error {:body (merge/displace {:error :internal-server-error})}
+  {::static/bad-request           {:body ^:displace {:error :bad-request}}
+   ::static/not-found             {:body ^:displace {:error :not-found}}
+   ::static/method-not-allowed    {:body ^:displace {:error :method-not-allowed}}
+   ::static/internal-server-error {:body ^:displace {:error :internal-server-error}}
    ::mw/format                    {}
-   ::mw/defaults                  (merge/displace defaults/api-defaults)
+   ::mw/defaults                  (with-meta defaults/api-defaults {:demote true})
    ::core/handler                 {:middleware ^:distinct [(ig/ref ::mw/not-found)
                                                            (ig/ref ::mw/format)
                                                            (ig/ref ::mw/defaults)]}})
@@ -103,7 +101,7 @@
    ::static/method-not-allowed    (html-response error-405)
    ::static/internal-server-error (html-response error-500)
    ::mw/webjars                   {}
-   ::mw/defaults                  (merge/displace (site-defaults project-ns))
+   ::mw/defaults                  (with-meta (site-defaults project-ns) {:demote true})
    ::core/handler                 {:middleware ^:distinct [(ig/ref ::mw/not-found)
                                                            (ig/ref ::mw/webjars)
                                                            (ig/ref ::mw/defaults)]}})
