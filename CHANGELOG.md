@@ -1,3 +1,7 @@
+## 0.5.4 (2017-06-24)
+
+* Improved format middleware option merging (#3)
+
 ## 0.5.3 (2017-06-23)
 
 * Made defaults middleware easier to selectively override
