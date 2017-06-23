@@ -1,3 +1,7 @@
+## 0.5.3 (2017-06-23)
+
+* Made defaults middleware easier to selectively override
+
 ## 0.5.2 (2017-06-14)
 
 * Fixed bug with static handlers and non-standard response bodies
