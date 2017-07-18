@@ -9,7 +9,7 @@
                  [duct/server.http.jetty "0.1.5"]
                  [compojure "1.6.0"]
                  [integrant "0.4.1"]
-                 [metosin/muuntaja "0.2.1"]
+                 [metosin/muuntaja "0.3.1"]
                  [org.slf4j/slf4j-nop "1.7.25"]
                  [org.webjars/normalize.css "5.0.0"]
                  [ring/ring-core "1.6.2"]
