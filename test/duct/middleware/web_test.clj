@@ -17,7 +17,7 @@
             handler  (wrap-log-requests (constantly response) (->TestLogger logs))]
         (is (= (handler (mock/request :get "/")) response))
         (is (= @logs [[:info :duct.middleware.web/request
-                       {:request-method :get, :uri "/", :query-string nil}]]))))
+                       {:request-method :get, :uri "/"}]]))))
     
     (testing "asynchronous"
       (let [logs     (atom [])
@@ -30,7 +30,7 @@
         (is (not (realized? raise)))
         (is (= @respond response))
         (is (= @logs [[:info :duct.middleware.web/request
-                       {:request-method :get, :uri "/", :query-string nil}]]))))))
+                       {:request-method :get, :uri "/"}]]))))))
 
 (deftest test-wrap-log-errors
   (let [ex (Exception. "testing")]

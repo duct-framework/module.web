@@ -17,4 +17,4 @@
                  [ring/ring-defaults "0.3.0"]
                  [ring-webjars "0.2.0"]]
   :profiles
-  {:dev {:dependencies [[ring/ring-mock "0.3.0"]]}})
+  {:dev {:dependencies [[ring/ring-mock "0.3.1"]]}})
