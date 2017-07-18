@@ -1,3 +1,7 @@
+## 0.5.5 (2017-07-18)
+
+* Updated dependencies
+
 ## 0.5.4 (2017-06-24)
 
 * Improved format middleware option merging (#3)
