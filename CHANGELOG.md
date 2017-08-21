@@ -1,3 +1,10 @@
+## 0.6.0 (2017-08-21)
+
+* Updated duct/core to 0.6.0
+* Removed additional requires from module for lean prep
+* Updated Ring-Defaults to 0.3.1
+* Updated Muuntaja to 0.3.2
+
 ## 0.5.5 (2017-07-18)
 
 * Updated dependencies
