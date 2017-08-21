@@ -104,10 +104,6 @@
                                                            (ig/ref ::mw/webjars)
                                                            (ig/ref ::mw/defaults)]}})
 
-(derive :duct.module/web :duct/module)
-(derive ::api            :duct/module)
-(derive ::site           :duct/module)
-
 (defn- apply-web-module [config options module-config]
   (core/merge-configs config
                       (server-config config)
