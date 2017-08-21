@@ -4,8 +4,7 @@
             [duct.core :as core]
             [duct.core.env :as env]
             [duct.core.merge :as merge]
-            [integrant.core :as ig]
-            [ring.middleware.defaults :as defaults]))
+            [integrant.core :as ig]))
 
 (def ^:private server-port
   (env/env '["PORT" Int :or 3000]))
@@ -62,12 +61,19 @@
 (defn- html-response [html]
   ^:demote {:headers {"Content-Type" "text/html; charset=UTF-8"}, :body html})
 
+(def ^:private base-ring-defaults
+  ^:demote {:params    {:urlencoded true, :keywordize true}
+            :responses {:not-modified-responses true
+                        :absolute-redirects true
+                        :content-types true
+                        :default-charset "utf-8"}})
+
 (def ^:private base-config
   {:duct.handler.static/bad-request           (plaintext-response "Bad Request")
    :duct.handler.static/not-found             (plaintext-response "Not Found")
    :duct.handler.static/method-not-allowed    (plaintext-response "Method Not Allowed")
    :duct.handler.static/internal-server-error (plaintext-response "Internal Server Error")
-   :duct.middleware.web/defaults              (with-meta defaults/api-defaults {:demote true})
+   :duct.middleware.web/defaults              base-ring-defaults
    :duct.core/handler
    {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
                             (ig/ref :duct.middleware.web/defaults)]}})
@@ -79,7 +85,7 @@
    :duct.handler.static/internal-server-error
    {:body ^:displace {:error :internal-server-error}}
    :duct.middleware.web/format   {}
-   :duct.middleware.web/defaults (with-meta defaults/api-defaults {:demote true})
+   :duct.middleware.web/defaults base-ring-defaults
    :duct.core/handler
    {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
                             (ig/ref :duct.middleware.web/format)
@@ -90,19 +96,28 @@
 (def ^:private error-405 (io/resource "duct/module/web/errors/405.html"))
 (def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
 
-(defn- site-resource-paths [project-ns]
-  ["duct/module/web/public" (str (name-to-path project-ns) "/public")])
-
-(defn- site-defaults [project-ns]
-  (assoc-in defaults/site-defaults [:static :resources] (site-resource-paths project-ns)))
+(defn- site-ring-defaults [project-ns]
+  ^:demote {:params    {:urlencoded true, :multipart true, :nested true, :keywordize true}
+            :cookies   true
+            :session   {:flash true, :cookie-attrs {:http-only true}}
+            :security  {:anti-forgery         true
+                        :xss-protection       {:enable? true, :mode :block}
+                        :frame-options        :sameorigin
+                        :content-type-options :nosniff}
+            :static    {:resources ["duct/module/web/public"
+                                    (str (name-to-path project-ns) "/public")]}
+            :responses {:not-modified-responses true
+                        :absolute-redirects     true
+                        :content-types          true
+                        :default-charset        "utf-8"}})
 
 (defn- site-config [project-ns]
   {:duct.handler.static/bad-request           (html-response error-400)
    :duct.handler.static/not-found             (html-response error-404)
    :duct.handler.static/method-not-allowed    (html-response error-405)
    :duct.handler.static/internal-server-error (html-response error-500)
-   :duct.middleware.web/webjars  {}
-   :duct.middleware.web/defaults (with-meta (site-defaults project-ns) {:demote true})
+   :duct.middleware.web/webjars               {}
+   :duct.middleware.web/defaults              (site-ring-defaults project-ns)
    :duct.core/handler
    {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
                             (ig/ref :duct.middleware.web/webjars)
