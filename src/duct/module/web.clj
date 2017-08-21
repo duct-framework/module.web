@@ -4,9 +4,6 @@
             [duct.core :as core]
             [duct.core.env :as env]
             [duct.core.merge :as merge]
-            [duct.handler.static :as static]
-            [duct.middleware.web :as mw]
-            [duct.router.cascading :as router]
             [integrant.core :as ig]
             [ring.middleware.defaults :as defaults]))
 
@@ -37,24 +34,27 @@
     {}))
 
 (def ^:private logging-config
-  {::mw/log-requests {:logger (ig/ref :duct/logger)}
-   ::mw/log-errors   {:logger (ig/ref :duct/logger)}
-   ::core/handler    {:middleware ^:distinct [(ig/ref ::mw/log-requests)
-                                              (ig/ref ::mw/log-errors)]}})
+  {:duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
+   :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}
+   :duct.core/handler
+   {:middleware ^:distinct [(ig/ref :duct.middleware.web/log-requests)
+                            (ig/ref :duct.middleware.web/log-errors)]}})
 
 (def ^:private error-configs
   {:production
-   {::core/handler {:middleware ^:distinct [(ig/ref ::mw/hide-errors)]}}
+   {:duct.core/handler {:middleware ^:distinct [(ig/ref :duct.middleware.web/hide-errors)]}}
    :development
-   {::core/handler {:middleware ^:distinct [(ig/ref ::mw/stacktrace)]}}})
+   {:duct.core/handler {:middleware ^:distinct [(ig/ref :duct.middleware.web/stacktrace)]}}})
 
 (def ^:private common-config
-  {::mw/not-found    {:error-handler (merge/displace (ig/ref ::static/not-found))}
-   ::mw/hide-errors  {:error-handler (merge/displace (ig/ref ::static/internal-server-error))}
-   ::mw/stacktrace   {}
-   ::core/handler    {:router  (merge/displace (ig/ref :duct/router))}
-   :duct.server/http {:handler (merge/displace (ig/ref ::core/handler))
-                      :logger  (merge/displace (ig/ref :duct/logger))}})
+  {:duct.middleware.web/not-found
+   {:error-handler (merge/displace (ig/ref :duct.handler.static/not-found))}
+   :duct.middleware.web/hide-errors
+   {:error-handler (merge/displace (ig/ref :duct.handler.static/internal-server-error))}
+   :duct.middleware.web/stacktrace {}
+   :duct.core/handler {:router  (merge/displace (ig/ref :duct/router))}
+   :duct.server/http  {:handler (merge/displace (ig/ref :duct.core/handler))
+                       :logger  (merge/displace (ig/ref :duct/logger))}})
 
 (defn- plaintext-response [text]
   ^:demote {:headers {"Content-Type" "text/plain; charset=UTF-8"}, :body text})
@@ -63,24 +63,27 @@
   ^:demote {:headers {"Content-Type" "text/html; charset=UTF-8"}, :body html})
 
 (def ^:private base-config
-  {::static/bad-request           (plaintext-response "Bad Request")
-   ::static/not-found             (plaintext-response "Not Found")
-   ::static/method-not-allowed    (plaintext-response "Method Not Allowed")
-   ::static/internal-server-error (plaintext-response "Internal Server Error")
-   ::mw/defaults                  (with-meta defaults/api-defaults {:demote true})
-   ::core/handler                 {:middleware ^:distinct [(ig/ref ::mw/not-found)
-                                                           (ig/ref ::mw/defaults)]}})
+  {:duct.handler.static/bad-request           (plaintext-response "Bad Request")
+   :duct.handler.static/not-found             (plaintext-response "Not Found")
+   :duct.handler.static/method-not-allowed    (plaintext-response "Method Not Allowed")
+   :duct.handler.static/internal-server-error (plaintext-response "Internal Server Error")
+   :duct.middleware.web/defaults              (with-meta defaults/api-defaults {:demote true})
+   :duct.core/handler
+   {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
+                            (ig/ref :duct.middleware.web/defaults)]}})
 
 (def ^:private api-config
-  {::static/bad-request           {:body ^:displace {:error :bad-request}}
-   ::static/not-found             {:body ^:displace {:error :not-found}}
-   ::static/method-not-allowed    {:body ^:displace {:error :method-not-allowed}}
-   ::static/internal-server-error {:body ^:displace {:error :internal-server-error}}
-   ::mw/format                    {}
-   ::mw/defaults                  (with-meta defaults/api-defaults {:demote true})
-   ::core/handler                 {:middleware ^:distinct [(ig/ref ::mw/not-found)
-                                                           (ig/ref ::mw/format)
-                                                           (ig/ref ::mw/defaults)]}})
+  {:duct.handler.static/bad-request           {:body ^:displace {:error :bad-request}}
+   :duct.handler.static/not-found             {:body ^:displace {:error :not-found}}
+   :duct.handler.static/method-not-allowed    {:body ^:displace {:error :method-not-allowed}}
+   :duct.handler.static/internal-server-error
+   {:body ^:displace {:error :internal-server-error}}
+   :duct.middleware.web/format   {}
+   :duct.middleware.web/defaults (with-meta defaults/api-defaults {:demote true})
+   :duct.core/handler
+   {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
+                            (ig/ref :duct.middleware.web/format)
+                            (ig/ref :duct.middleware.web/defaults)]}})
 
 (def ^:private error-400 (io/resource "duct/module/web/errors/400.html"))
 (def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
@@ -94,15 +97,16 @@
   (assoc-in defaults/site-defaults [:static :resources] (site-resource-paths project-ns)))
 
 (defn- site-config [project-ns]
-  {::static/bad-request           (html-response error-400)
-   ::static/not-found             (html-response error-404)
-   ::static/method-not-allowed    (html-response error-405)
-   ::static/internal-server-error (html-response error-500)
-   ::mw/webjars                   {}
-   ::mw/defaults                  (with-meta (site-defaults project-ns) {:demote true})
-   ::core/handler                 {:middleware ^:distinct [(ig/ref ::mw/not-found)
-                                                           (ig/ref ::mw/webjars)
-                                                           (ig/ref ::mw/defaults)]}})
+  {:duct.handler.static/bad-request           (html-response error-400)
+   :duct.handler.static/not-found             (html-response error-404)
+   :duct.handler.static/method-not-allowed    (html-response error-405)
+   :duct.handler.static/internal-server-error (html-response error-500)
+   :duct.middleware.web/webjars  {}
+   :duct.middleware.web/defaults (with-meta (site-defaults project-ns) {:demote true})
+   :duct.core/handler
+   {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
+                            (ig/ref :duct.middleware.web/webjars)
+                            (ig/ref :duct.middleware.web/defaults)]}})
 
 (defn- apply-web-module [config options module-config]
   (core/merge-configs config
