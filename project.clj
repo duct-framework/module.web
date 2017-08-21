@@ -14,7 +14,7 @@
                  [org.webjars/normalize.css "5.0.0"]
                  [ring/ring-core "1.6.2"]
                  [ring/ring-devel "1.6.2"]
-                 [ring/ring-defaults "0.3.0"]
+                 [ring/ring-defaults "0.3.1"]
                  [ring-webjars "0.2.0"]]
   :profiles
   {:dev {:dependencies [[ring/ring-mock "0.3.1"]]}})

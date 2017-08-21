@@ -134,7 +134,7 @@
                              :nested     true
                              :keywordize true}
                   :cookies   true
-                  :session   {:flash true, :cookie-attrs {:http-only true}}
+                  :session   {:flash true, :cookie-attrs {:http-only true, :same-site :strict}}
                   :security  {:anti-forgery         true
                               :xss-protection       {:enable? true, :mode :block}
                               :frame-options        :sameorigin
