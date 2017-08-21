@@ -5,6 +5,8 @@
             [duct.module.web :as web]
             [integrant.core :as ig]))
 
+(core/load-hierarchy)
+
 (derive :duct.logger/fake :duct/logger)
 (derive :duct.router/fake :duct/router)
 (derive :duct.server.http/fake :duct.server/http)
