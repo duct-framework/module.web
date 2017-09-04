@@ -1,3 +1,4 @@
-{:duct.module/web      [:duct/module]
- :duct.module.web/api  [:duct/module]
- :duct.module.web/site [:duct/module]}
+{:duct.module/web       [:duct/module]
+ :duct.module.web/api   [:duct/module]
+ :duct.module.web/site  [:duct/module]
+ :duct.router/cascading [:duct/router]}
