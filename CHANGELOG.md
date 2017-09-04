@@ -1,3 +1,8 @@
+## 0.6.1 (2017-09-040
+
+* Updated `duct/core` to 0.6.1
+* Updated `duct/logger` to 0.2.1
+
 ## 0.6.0 (2017-08-21)
 
 * Updated duct/core to 0.6.0
