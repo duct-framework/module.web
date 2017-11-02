@@ -1,3 +1,7 @@
+## 0.6.3 (2017-11-02)
+
+* Updated dependencies
+
 ## 0.6.2 (2017-09-04)
 
 * Fixed missing `:duct.router/cascading` derive
