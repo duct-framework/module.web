@@ -1,3 +1,7 @@
+## 0.6.4 (2017-12-16)
+
+* Updated dependencies
+
 ## 0.6.3 (2017-11-02)
 
 * Updated dependencies
