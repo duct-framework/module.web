@@ -133,13 +133,10 @@
                       (error-configs (get-environment config options))))
 
 (defmethod ig/init-key :duct.module/web [_ options]
-  {:req #{:duct/logger}
-   :fn  #(apply-web-module % options base-config)})
+  #(apply-web-module % options base-config))
 
 (defmethod ig/init-key ::api [_ options]
-  {:req #{:duct/logger}
-   :fn  #(apply-web-module % options api-config)})
+  #(apply-web-module % options api-config))
 
 (defmethod ig/init-key ::site [_ options]
-  {:req #{:duct/logger}
-   :fn  #(apply-web-module % options (site-config (get-project-ns % options)))})
+  #(apply-web-module % options (site-config (get-project-ns % options))))
