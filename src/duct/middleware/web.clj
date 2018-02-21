@@ -119,7 +119,7 @@
   #(wrap-stacktrace % options))
 
 (defn- deep-merge [a b]
-  (if (and (map? a) (map b))
+  (if (and (map? a) (map? b))
     (merge-with deep-merge a b)
     b))
 
