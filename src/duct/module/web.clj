@@ -33,8 +33,8 @@
     {}))
 
 (def ^:private logging-config
-  {:duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
-   :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}
+  {:duct.middleware.web/log-requests {}
+   :duct.middleware.web/log-errors   {}
    :duct.core/handler
    {:middleware ^:distinct [(ig/ref :duct.middleware.web/log-requests)
                             (ig/ref :duct.middleware.web/log-errors)]}})

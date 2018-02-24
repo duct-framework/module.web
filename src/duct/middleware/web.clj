@@ -94,6 +94,12 @@
     ([request respond raise]
      (handler (route-aliases-request request aliases) respond raise))))
 
+(defmethod ig/prep-key ::log-requests [_ options]
+  (merge {:logger (ig/ref :duct/logger)} options))
+
+(defmethod ig/prep-key ::log-errors [_ options]
+  (merge {:logger (ig/ref :duct/logger)} options))
+
 (defmethod ig/init-key ::log-requests [_ {:keys [logger]}]
   #(wrap-log-requests % logger))
 

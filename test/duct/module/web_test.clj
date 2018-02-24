@@ -72,10 +72,8 @@
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
           :duct.middleware.web/not-found
           {:error-handler (ig/ref :duct.handler.static/not-found)}
-          :duct.middleware.web/log-requests
-          {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-errors
-          {:logger (ig/ref :duct/logger)}}
+          :duct.middleware.web/log-requests {}
+          :duct.middleware.web/log-errors   {}}
          (core/build-config base-config))))
 
 (deftest api-module-test
@@ -116,10 +114,8 @@
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
           :duct.middleware.web/not-found
           {:error-handler (ig/ref :duct.handler.static/not-found)}
-          :duct.middleware.web/log-requests
-          {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-errors
-          {:logger (ig/ref :duct/logger)}}
+          :duct.middleware.web/log-requests {}
+          :duct.middleware.web/log-errors   {}}
          (core/build-config api-config))))
 
 (deftest site-module-test
@@ -174,10 +170,8 @@
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
           :duct.middleware.web/not-found
           {:error-handler (ig/ref :duct.handler.static/not-found)}
-          :duct.middleware.web/log-requests
-          {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-errors
-          {:logger (ig/ref :duct/logger)}}
+          :duct.middleware.web/log-requests {}
+          :duct.middleware.web/log-errors   {}}
          (core/build-config site-config))))
 
 (deftest http-server-test
