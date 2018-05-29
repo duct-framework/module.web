@@ -1,3 +1,8 @@
+## 0.7.0-alpha1 (2018-05-29)
+
+* Updated module to use duct/core 0.7.0 alpha
+* Fixed Muuntaja option merge
+
 ## 0.6.4 (2017-12-16)
 
 * Updated dependencies
