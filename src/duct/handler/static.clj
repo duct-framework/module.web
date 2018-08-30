@@ -49,6 +49,11 @@
 (defmethod ig/init-key ::bad-request [_ response]
   (make-handler (assoc response :status 400)))
 
+(defmethod ig/init-key ::bad-request-malformed [_ response]
+  (let [handler (make-handler (assoc response :status 400))]
+    (fn [_ _ request]
+      (handler request))))
+
 (defmethod ig/init-key ::not-found [_ response]
   (make-handler (assoc response :status 404)))
 
