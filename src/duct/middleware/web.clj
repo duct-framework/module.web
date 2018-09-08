@@ -1,5 +1,6 @@
 (ns duct.middleware.web
-  (:require [duct.logger :as logger]
+  (:require [cheshire.core :as cheshire]
+            [duct.logger :as logger]
             [integrant.core :as ig]
             [muuntaja.core :as mc]
             [muuntaja.middleware :as mm]
@@ -129,5 +130,14 @@
     (merge-with deep-merge a b)
     b))
 
-(defmethod ig/init-key ::format [_ options]
-  #(mm/wrap-format % (deep-merge mc/default-options options)))
+(defmethod ig/init-key ::format [_ {:keys [malformed-handler]
+                                    :as options
+                                    :or {malformed-handler
+                                         (fn [error content-type request]
+                                           (let [handler (:malformed-handler options)]
+                                             (-> (handler error content-type request)
+                                                 (update :body cheshire/generate-string)
+                                                 (assoc-in [:headers "Content-Type"] "application/json"))))}}]
+  #(mm/wrap-exception
+     (mm/wrap-format % (deep-merge mc/default-options options))
+     malformed-handler))

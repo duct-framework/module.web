@@ -58,6 +58,9 @@
           :duct.handler.static/bad-request
           {:headers {"Content-Type" "text/plain; charset=UTF-8"}
            :body    "Bad Request"}
+          :duct.handler.static/bad-request-malformed
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body "Bad Request Malformed"}
           :duct.handler.static/not-found
           {:headers {"Content-Type" "text/plain; charset=UTF-8"}
            :body    "Not Found"}
@@ -102,13 +105,16 @@
            :logger  (ig/ref :duct/logger)}
           :duct.handler.static/bad-request
           {:body {:error :bad-request}}
+          :duct.handler.static/bad-request-malformed
+          {:body {:error :malformed-request-body}}
           :duct.handler.static/not-found
           {:body {:error :not-found}}
           :duct.handler.static/method-not-allowed
           {:body {:error :method-not-allowed}}
           :duct.handler.static/internal-server-error
           {:body {:error :internal-server-error}}
-          :duct.middleware.web/format     {}
+          :duct.middleware.web/format
+          {:malformed-handler (ig/ref :duct.handler.static/bad-request-malformed)}
           :duct.middleware.web/stacktrace {}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
@@ -155,6 +161,9 @@
           :duct.middleware.web/webjars    {}
           :duct.middleware.web/stacktrace {}
           :duct.handler.static/bad-request
+          {:headers {"Content-Type" "text/html; charset=UTF-8"}
+           :body    (io/resource "duct/module/web/errors/400.html")}
+          :duct.handler.static/bad-request-malformed
           {:headers {"Content-Type" "text/html; charset=UTF-8"}
            :body    (io/resource "duct/module/web/errors/400.html")}
           :duct.handler.static/not-found

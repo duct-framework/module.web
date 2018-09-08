@@ -70,6 +70,7 @@
 
 (def ^:private base-config
   {:duct.handler.static/bad-request           (plaintext-response "Bad Request")
+   :duct.handler.static/bad-request-malformed (plaintext-response "Bad Request Malformed")
    :duct.handler.static/not-found             (plaintext-response "Not Found")
    :duct.handler.static/method-not-allowed    (plaintext-response "Method Not Allowed")
    :duct.handler.static/internal-server-error (plaintext-response "Internal Server Error")
@@ -80,11 +81,12 @@
 
 (def ^:private api-config
   {:duct.handler.static/bad-request           {:body ^:displace {:error :bad-request}}
+   :duct.handler.static/bad-request-malformed {:body ^:displace {:error :malformed-request-body}}
    :duct.handler.static/not-found             {:body ^:displace {:error :not-found}}
    :duct.handler.static/method-not-allowed    {:body ^:displace {:error :method-not-allowed}}
    :duct.handler.static/internal-server-error
    {:body ^:displace {:error :internal-server-error}}
-   :duct.middleware.web/format   {}
+   :duct.middleware.web/format   {:malformed-handler (ig/ref :duct.handler.static/bad-request-malformed)}
    :duct.middleware.web/defaults base-ring-defaults
    :duct.core/handler
    {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
@@ -113,6 +115,7 @@
 
 (defn- site-config [project-ns]
   {:duct.handler.static/bad-request           (html-response error-400)
+   :duct.handler.static/bad-request-malformed (html-response error-400)
    :duct.handler.static/not-found             (html-response error-404)
    :duct.handler.static/method-not-allowed    (html-response error-405)
    :duct.handler.static/internal-server-error (html-response error-500)
