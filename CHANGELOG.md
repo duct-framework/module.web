@@ -1,3 +1,8 @@
+## 0.7.0-alpha2 (2018-09-22)
+
+* Updated dependencies
+* Replaced `io/resource` with `duct.core/resource`
+
 ## 0.7.0-alpha1 (2018-05-29)
 
 * Updated module to use duct/core 0.7.0 alpha
