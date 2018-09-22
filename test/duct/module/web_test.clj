@@ -156,16 +156,16 @@
           :duct.middleware.web/stacktrace {}
           :duct.handler.static/bad-request
           {:headers {"Content-Type" "text/html; charset=UTF-8"}
-           :body    (io/resource "duct/module/web/errors/400.html")}
+           :body    (core/resource "duct/module/web/errors/400.html")}
           :duct.handler.static/not-found
           {:headers {"Content-Type" "text/html; charset=UTF-8"}
-           :body    (io/resource "duct/module/web/errors/404.html")}
+           :body    (core/resource "duct/module/web/errors/404.html")}
           :duct.handler.static/method-not-allowed
           {:headers {"Content-Type" "text/html; charset=UTF-8"}
-           :body    (io/resource "duct/module/web/errors/405.html")}
+           :body    (core/resource "duct/module/web/errors/405.html")}
           :duct.handler.static/internal-server-error
           {:headers {"Content-Type" "text/html; charset=UTF-8"}
-           :body    (io/resource "duct/module/web/errors/500.html")}
+           :body    (core/resource "duct/module/web/errors/500.html")}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
           :duct.middleware.web/not-found

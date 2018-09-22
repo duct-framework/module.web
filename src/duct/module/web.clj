@@ -91,10 +91,10 @@
                             (ig/ref :duct.middleware.web/format)
                             (ig/ref :duct.middleware.web/defaults)]}})
 
-(def ^:private error-400 (io/resource "duct/module/web/errors/400.html"))
-(def ^:private error-404 (io/resource "duct/module/web/errors/404.html"))
-(def ^:private error-405 (io/resource "duct/module/web/errors/405.html"))
-(def ^:private error-500 (io/resource "duct/module/web/errors/500.html"))
+(def ^:private error-400 (core/resource "duct/module/web/errors/400.html"))
+(def ^:private error-404 (core/resource "duct/module/web/errors/404.html"))
+(def ^:private error-405 (core/resource "duct/module/web/errors/405.html"))
+(def ^:private error-500 (core/resource "duct/module/web/errors/500.html"))
 
 (defn- site-ring-defaults [project-ns]
   ^:demote {:params    {:urlencoded true, :multipart true, :nested true, :keywordize true}
