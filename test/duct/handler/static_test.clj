@@ -1,6 +1,7 @@
 (ns duct.handler.static-test
   (:require [clojure.java.io :as io]
             [clojure.test :refer :all]
+            [duct.core :as duct]
             [duct.handler.static :as static]
             [integrant.core :as ig]))
 
@@ -22,8 +23,17 @@
       (is (string? (get-in response [:headers "Last-Modified"])))
       (is (= (slurp (:body response)) "foo\n"))))
 
-  (testing "file body"
+  (testing "URL body"
     (let [file     (io/resource "duct/assets/test.txt")
+          handler  (ig/init-key :duct.handler/static {:body file})
+          response (handler {})]
+      (is (= (get-in response [:headers "Content-Type"]) "text/plain"))
+      (is (= (get-in response [:headers "Content-Length"]) "4"))
+      (is (string? (get-in response [:headers "Last-Modified"])))
+      (is (= (slurp (:body response)) "foo\n"))))
+
+  (testing "resource body"
+    (let [file     (duct/resource "duct/assets/test.txt")
           handler  (ig/init-key :duct.handler/static {:body file})
           response (handler {})]
       (is (= (get-in response [:headers "Content-Type"]) "text/plain"))

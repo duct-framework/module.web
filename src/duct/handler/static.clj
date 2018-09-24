@@ -1,5 +1,6 @@
 (ns duct.handler.static
   (:require [clojure.java.io :as io]
+            [duct.core.resource :as resource]
             [integrant.core :as ig]
             [ring.util.mime-type :as mime]
             [ring.util.response :as resp]))
@@ -30,7 +31,10 @@
   (update-response [url response]
     (if-let [r (resp/url-response url)]
       (-> response (merge-response r) (guess-content-type (str url)))
-      (assoc response :body nil))))
+      (assoc response :body nil)))
+  duct.core.resource.Resource
+  (update-response [r response]
+    (update-response (io/as-url r) response)))
 
 (defn- ring-response [response]
   (update-response (:body response) response))
