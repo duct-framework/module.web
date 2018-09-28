@@ -1,3 +1,9 @@
+## 0.7.0-alpha3 (2018-09-28)
+
+* Updated dependencies
+* Replaced `:duct.core/handler` with `:duct.handler/root`
+* Added `duct.core/resource` to static handlers
+
 ## 0.7.0-alpha2 (2018-09-22)
 
 * Updated dependencies
