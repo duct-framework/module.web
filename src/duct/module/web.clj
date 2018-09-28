@@ -35,15 +35,15 @@
 (def ^:private logging-config
   {:duct.middleware.web/log-requests {}
    :duct.middleware.web/log-errors   {}
-   :duct.core/handler
+   :duct.handler/root
    {:middleware ^:distinct [(ig/ref :duct.middleware.web/log-requests)
                             (ig/ref :duct.middleware.web/log-errors)]}})
 
 (def ^:private error-configs
   {:production
-   {:duct.core/handler {:middleware ^:distinct [(ig/ref :duct.middleware.web/hide-errors)]}}
+   {:duct.handler/root {:middleware ^:distinct [(ig/ref :duct.middleware.web/hide-errors)]}}
    :development
-   {:duct.core/handler {:middleware ^:distinct [(ig/ref :duct.middleware.web/stacktrace)]}}})
+   {:duct.handler/root {:middleware ^:distinct [(ig/ref :duct.middleware.web/stacktrace)]}}})
 
 (def ^:private common-config
   {:duct.middleware.web/not-found
@@ -51,8 +51,8 @@
    :duct.middleware.web/hide-errors
    {:error-handler (merge/displace (ig/ref :duct.handler.static/internal-server-error))}
    :duct.middleware.web/stacktrace {}
-   :duct.core/handler {:router  (merge/displace (ig/ref :duct/router))}
-   :duct.server/http  {:handler (merge/displace (ig/ref :duct.core/handler))
+   :duct.handler/root {:router  (merge/displace (ig/ref :duct/router))}
+   :duct.server/http  {:handler (merge/displace (ig/ref :duct.handler/root))
                        :logger  (merge/displace (ig/ref :duct/logger))}})
 
 (defn- plaintext-response [text]
@@ -74,7 +74,7 @@
    :duct.handler.static/method-not-allowed    (plaintext-response "Method Not Allowed")
    :duct.handler.static/internal-server-error (plaintext-response "Internal Server Error")
    :duct.middleware.web/defaults              base-ring-defaults
-   :duct.core/handler
+   :duct.handler/root
    {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
                             (ig/ref :duct.middleware.web/defaults)]}})
 
@@ -86,7 +86,7 @@
    {:body ^:displace {:error :internal-server-error}}
    :duct.middleware.web/format   {}
    :duct.middleware.web/defaults base-ring-defaults
-   :duct.core/handler
+   :duct.handler/root
    {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
                             (ig/ref :duct.middleware.web/format)
                             (ig/ref :duct.middleware.web/defaults)]}})
@@ -118,7 +118,7 @@
    :duct.handler.static/internal-server-error (html-response error-500)
    :duct.middleware.web/webjars               {}
    :duct.middleware.web/defaults              (site-ring-defaults project-ns)
-   :duct.core/handler
+   :duct.handler/root
    {:middleware ^:distinct [(ig/ref :duct.middleware.web/not-found)
                             (ig/ref :duct.middleware.web/webjars)
                             (ig/ref :duct.middleware.web/defaults)]}})

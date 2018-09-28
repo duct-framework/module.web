@@ -37,7 +37,7 @@
           :duct.core/environment :production
           :duct.logger/fake      {}
           :duct.router/cascading []
-          :duct.core/handler
+          :duct.handler/root
           {:router (ig/ref :duct/router)
            :middleware
            [(ig/ref :duct.middleware.web/not-found)
@@ -53,7 +53,7 @@
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
           {:port    3000
-           :handler (ig/ref :duct.core/handler)
+           :handler (ig/ref :duct.handler/root)
            :logger  (ig/ref :duct/logger)}
           :duct.handler.static/bad-request
           {:headers {"Content-Type" "text/plain; charset=UTF-8"}
@@ -81,7 +81,7 @@
           :duct.core/environment :production
           :duct.logger/fake      {}
           :duct.router/cascading []
-          :duct.core/handler
+          :duct.handler/root
           {:router (ig/ref :duct/router)
            :middleware
            [(ig/ref :duct.middleware.web/not-found)
@@ -98,7 +98,7 @@
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
           {:port    3000
-           :handler (ig/ref :duct.core/handler)
+           :handler (ig/ref :duct.handler/root)
            :logger  (ig/ref :duct/logger)}
           :duct.handler.static/bad-request
           {:body {:error :bad-request}}
@@ -123,7 +123,7 @@
           :duct.core/environment :production
           :duct.logger/fake      {}
           :duct.router/cascading []
-          :duct.core/handler
+          :duct.handler/root
           {:router (ig/ref :duct/router)
            :middleware
            [(ig/ref :duct.middleware.web/not-found)
@@ -150,7 +150,7 @@
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
           {:port    3000
-           :handler (ig/ref :duct.core/handler)
+           :handler (ig/ref :duct.handler/root)
            :logger  (ig/ref :duct/logger)}
           :duct.middleware.web/webjars    {}
           :duct.middleware.web/stacktrace {}
@@ -181,7 +181,7 @@
         config' (core/build-config config)]
     (is (not (contains? config' :duct.server.http/jetty)))
     (is (= {:port    8080
-            :handler (ig/ref :duct.core/handler)
+            :handler (ig/ref :duct.handler/root)
             :logger  (ig/ref :duct/logger)}
            (:duct.server.http/fake config')))))
 

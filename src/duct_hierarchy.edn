@@ -1,4 +1,11 @@
 {:duct.module/web       [:duct/module]
  :duct.module.web/api   [:duct/module]
  :duct.module.web/site  [:duct/module]
- :duct.router/cascading [:duct/router]}
+ :duct.router/cascading [:duct/router]
+ :duct.handler/root     [:duct/handler]
+ :duct.handler/static   [:duct/handler]
+ :duct.handler.static/ok                    [:duct.handler/static]
+ :duct.handler.static/bad-request           [:duct.handler/static]
+ :duct.handler.static/not-found             [:duct.handler/static]
+ :duct.handler.static/method-not-allowed    [:duct.handler/static]
+ :duct.handler.static/internal-server-error [:duct.handler/static]}
