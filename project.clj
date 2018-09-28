@@ -8,7 +8,7 @@
                  [duct/logger "0.2.1"]
                  [duct/server.http.jetty "0.2.0"]
                  [compojure "1.6.1"]
-                 [integrant "0.7.0-alpha2"]
+                 [integrant "0.7.0"]
                  [metosin/muuntaja "0.6.0"]
                  [org.slf4j/slf4j-nop "1.7.25"]
                  [org.webjars/normalize.css "5.0.0"]
