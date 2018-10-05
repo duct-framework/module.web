@@ -107,7 +107,8 @@
           :duct.handler.static/method-not-allowed
           {:body {:error :method-not-allowed}}
           :duct.handler.static/internal-server-error
-          {:body {:error :internal-server-error}}
+          {:headers {"Content-Type" "application/json"}
+           :body    (core/resource "duct/module/web/errors/500.json")}
           :duct.middleware.web/format     {}
           :duct.middleware.web/stacktrace {}
           :duct.middleware.web/hide-errors

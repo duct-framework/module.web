@@ -83,7 +83,8 @@
    :duct.handler.static/not-found             {:body ^:displace {:error :not-found}}
    :duct.handler.static/method-not-allowed    {:body ^:displace {:error :method-not-allowed}}
    :duct.handler.static/internal-server-error
-   {:body ^:displace {:error :internal-server-error}}
+   {:headers {"Content-Type" "application/json"}
+    :body    (core/resource "duct/module/web/errors/500.json")}
    :duct.middleware.web/format   {}
    :duct.middleware.web/defaults base-ring-defaults
    :duct.handler/root
