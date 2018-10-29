@@ -1,3 +1,7 @@
+## 0.7.0-beta1 (2018-10-29)
+
+* Updated dependencies
+
 ## 0.7.0-alpha4 (2018-10-05)
 
 * Changed internal server error to always return JSON (#13)
