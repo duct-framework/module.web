@@ -1,3 +1,7 @@
+## 0.7.0 (2019-01-05)
+
+* Updated dependencies
+
 ## 0.7.0-beta1 (2018-10-29)
 
 * Updated dependencies

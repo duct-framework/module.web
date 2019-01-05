@@ -12,7 +12,7 @@ Duct.
 
 To install, add the following to your project `:dependencies`:
 
-    [duct/module.web "0.6.4"]
+    [duct/module.web "0.7.0"]
 
 ## Usage
 
