@@ -1,3 +1,7 @@
+## 0.7.1 (2020-09-04)
+
+* Updated dependencies
+
 ## 0.7.0 (2019-01-05)
 
 * Updated dependencies
