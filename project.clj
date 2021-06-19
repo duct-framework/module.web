@@ -10,11 +10,11 @@
                  [compojure "1.6.2"]
                  [integrant "0.8.0"]
                  [metosin/muuntaja "0.6.8"]
-                 [org.slf4j/slf4j-nop "1.7.30"]
+                 [org.slf4j/slf4j-nop "1.7.31"]
                  [org.webjars/normalize.css "5.0.0"]
-                 [ring/ring-core "1.9.1"]
-                 [ring/ring-devel "1.9.1"]
-                 [ring/ring-defaults "0.3.2"]
+                 [ring/ring-core "1.9.3"]
+                 [ring/ring-devel "1.9.3"]
+                 [ring/ring-defaults "0.3.3"]
                  [ring-webjars "0.2.0"]]
   :profiles
   {:dev {:dependencies [[ring/ring-mock "0.4.0"]]}})
