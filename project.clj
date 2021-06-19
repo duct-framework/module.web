@@ -9,6 +9,7 @@
                  [duct/server.http.jetty "0.2.1"]
                  [compojure "1.6.2"]
                  [integrant "0.8.0"]
+                 [metosin/jsonista "0.3.3"]
                  [metosin/muuntaja "0.6.8"]
                  [org.slf4j/slf4j-nop "1.7.31"]
                  [org.webjars/normalize.css "5.0.0"]
