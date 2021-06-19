@@ -1,3 +1,8 @@
+## 0.7.3 (2021-06-19)
+
+* Updated dependencies
+* Added explicit jsonista dependency
+
 ## 0.7.2 (2021-03-16)
 
 * Updated dependencies
