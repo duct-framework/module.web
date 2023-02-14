@@ -211,3 +211,21 @@
               :nested     true
               :keywordize true}
              (:params (:duct.middleware.web/defaults config')))))))
+
+(deftest log-requests-level-test
+  (testing "api config"
+    (let [config  (assoc-in site-config
+                            [:duct.profile/base :duct.middleware.web/defaults]
+                            {:duct.middleware.web/log-requests {:level :debug}})
+          config' (core/build-config config)]
+      (is (= {:level :debug}
+             (:duct.middleware.web/log-requests
+              (:duct.middleware.web/defaults config'))))))
+  (testing "site config"
+    (let [config  (assoc-in site-config
+                            [:duct.profile/base :duct.middleware.web/defaults]
+                            {:duct.middleware.web/log-requests {:level :debug}})
+          config' (core/build-config config)]
+      (is (= {:level :debug}
+             (:duct.middleware.web/log-requests
+              (:duct.middleware.web/defaults config')))))))
