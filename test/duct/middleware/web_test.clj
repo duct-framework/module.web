@@ -19,7 +19,16 @@
         (is (= (handler (mock/request :get "/")) response))
         (is (= @logs [[:info :duct.middleware.web/request
                        {:request-method :get, :uri "/"}]]))))
-    
+
+    (testing "synchronous with log level"
+      (let [logs    (atom [])
+            handler (wrap-log-requests (constantly response)
+                                       (->TestLogger logs)
+                                       {:level :trace})]
+        (is (= (handler (mock/request :get "/")) response))
+        (is (= @logs [[:trace :duct.middleware.web/request
+                       {:request-method :get, :uri "/"}]]))))
+
     (testing "asynchronous"
       (let [logs     (atom [])
             handler  (wrap-log-requests

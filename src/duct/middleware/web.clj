@@ -12,8 +12,8 @@
 (def ^:private request-log-keys
   [:request-method :uri :query-string])
 
-(defn- log-request [logger request]
-  (logger/log logger :info ::request (select-keys request request-log-keys)))
+(defn- log-request [logger request level]
+  (logger/log logger level ::request (select-keys request request-log-keys)))
 
 (defn- log-error [logger ex]
   (logger/log logger :error ::handler-error ex))
@@ -21,14 +21,16 @@
 (defn wrap-log-requests
   "Log each request using the supplied logger. The logger must implement the
   duct.core.protocols/Logger protocol."
-  [handler logger]
-  (fn
-    ([request]
-     (log-request logger request)
-     (handler request))
-    ([request respond raise]
-     (log-request logger request)
-     (handler request respond raise))))
+  ([handler logger]
+   (wrap-log-requests handler logger {}))
+  ([handler logger {:keys [level] :or {level :info}}]
+   (fn
+     ([request]
+      (log-request logger request level)
+      (handler request))
+     ([request respond raise]
+      (log-request logger request level)
+      (handler request respond raise)))))
 
 (defn wrap-log-errors
   "Log any exceptions with the supplied logger, then re-throw them."
@@ -100,8 +102,9 @@
 (defmethod ig/prep-key ::log-errors [_ options]
   (merge {:logger (ig/ref :duct/logger)} options))
 
-(defmethod ig/init-key ::log-requests [_ {:keys [logger]}]
-  #(wrap-log-requests % logger))
+(defmethod ig/init-key ::log-requests
+  [_ {:keys [logger options]}]
+  #(wrap-log-requests % logger (dissoc options :logger)))
 
 (defmethod ig/init-key ::log-errors [_ {:keys [logger]}]
   #(wrap-log-errors % logger))
