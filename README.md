@@ -1,6 +1,4 @@
-# Duct module.web
-
-[![Build Status](https://travis-ci.org/duct-framework/module.web.svg?branch=master)](https://travis-ci.org/duct-framework/module.web)
+# Duct module.web [![Build Status](https://github.com/duct-framework/module.web/actions/workflows/test.yml/badge.svg)](https://github.com/duct-framework/module.web/actions/workflows/test.yml)
 
 A [Duct][] module that adds a web server and useful middleware to a
 configuration. This is the basis of all web applications built with
