@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.11.4"]
                  [duct/core "0.8.1"]
                  [duct/logger "0.3.0"]
-                 [duct/server.http.jetty "0.2.1"]
+                 [duct/server.http.jetty "0.2.2"]
                  [compojure "1.7.1"]
                  [integrant "0.13.0"]
                  [metosin/jsonista "0.3.11"]
