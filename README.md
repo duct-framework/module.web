@@ -10,11 +10,11 @@ Duct.
 
 Add the following dependency to your deps.edn file:
 
-    duct/module.web {:mvn/version "0.7.3"}
+    duct/module.web {:mvn/version "0.7.4"}
 
 Or to your Leiningen project file:
 
-    [duct/module.web "0.7.3"]
+    [duct/module.web "0.7.4"]
 
 ## Usage
 
