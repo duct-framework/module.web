@@ -8,7 +8,11 @@ Duct.
 
 ## Installation
 
-To install, add the following to your project `:dependencies`:
+Add the following dependency to your deps.edn file:
+
+    duct/module.web {:mvn/version "0.7.3"}
+
+Or to your Leiningen project file:
 
     [duct/module.web "0.7.3"]
 
@@ -62,7 +66,7 @@ already, then that is used instead.
 
 ## License
 
-Copyright © 2021 James Reeves
+Copyright © 2024 James Reeves
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
