@@ -6,8 +6,7 @@
             [ring.middleware.defaults :refer [wrap-defaults]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
             [ring.middleware.webjars :refer [wrap-webjars]]
-            [ring.util.response :as response]
-            [duct.core.merge :as merge]))
+            [ring.util.response :as response]))
 
 (def ^:private request-log-keys
   [:request-method :uri :query-string])

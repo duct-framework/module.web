@@ -4,9 +4,8 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.11.4"]
-                 [duct/core "0.8.1"]
-                 [duct/logger "0.3.0"]
-                 [duct/server.http.jetty "0.2.2"]
+                 [org.duct-framework/logger "0.4.0"]
+                 [org.duct-framework/server.http.jetty "0.3.0"]
                  [compojure "1.7.1"]
                  [integrant "0.13.0"]
                  [metosin/jsonista "0.3.11"]
