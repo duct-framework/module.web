@@ -6,7 +6,7 @@ Duct.
 
 This current version is experimental and will only work with the new
 [duct.main][] tool. The artifact group name has been changed to prevent
-accidental upgrades.
+accidental upgrades. The version prior to this change was: `0.7.4`.
 
 [duct]: https://github.com/duct-framework/duct
 [duct.main]: https://github.com/duct-framework/duct.main
@@ -15,11 +15,11 @@ accidental upgrades.
 
 Add the following dependency to your deps.edn file:
 
-    org.duct-framework/module.web {:mvn/version "0.7.4"}
+    org.duct-framework/module.web {:mvn/version "0.8.0"}
 
 Or to your Leiningen project file:
 
-    [org.duct-framework/module.web "0.7.4"]
+    [org.duct-framework/module.web "0.8.0"]
 
 ## Usage
 

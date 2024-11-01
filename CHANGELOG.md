@@ -1,3 +1,9 @@
+## 0.8.0 (2024-11-01)
+
+* BREAKING CHANGE: converted library to use Integrant expansions
+* Changed artifact group name
+* Removed dependency on Duct core
+
 ## 0.7.4 (2024-10-25)
 
 * Updated dependencies
