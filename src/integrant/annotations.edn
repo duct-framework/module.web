@@ -1,0 +1,9 @@
+{:duct.module/web
+ {:duct/vars
+  {port {:env PORT, :arg port, :type :int, :default 3000}}}
+ :duct.module.web/api
+ {:duct/vars
+  {port {:env PORT, :arg port, :type :int, :default 3000}}}
+ :duct.module.web/site
+ {:duct/vars
+  {port {:env PORT, :arg port, :type :int, :default 3000}}}}
