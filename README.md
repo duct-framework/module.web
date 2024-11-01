@@ -4,17 +4,22 @@ A [Duct][] module that adds a web server and useful middleware to a
 configuration. This is the basis of all web applications built with
 Duct.
 
+This current version is experimental and will only work with the new
+[duct.main][] tool. The artifact group name has been changed to prevent
+accidental upgrades.
+
 [duct]: https://github.com/duct-framework/duct
+[duct.main]: https://github.com/duct-framework/duct.main
 
 ## Installation
 
 Add the following dependency to your deps.edn file:
 
-    duct/module.web {:mvn/version "0.7.4"}
+    org.duct-framework/module.web {:mvn/version "0.7.4"}
 
 Or to your Leiningen project file:
 
-    [duct/module.web "0.7.4"]
+    [org.duct-framework/module.web "0.7.4"]
 
 ## Usage
 
