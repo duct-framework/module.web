@@ -112,9 +112,3 @@
         (handler (mock/request :get "/") respond raise)
         (is (not (realized? raise)))
         (is (= @respond response))))))
-
-(deftest test-logger-prep
-  (is (= {:duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}}
-         (ig/prep {:duct.middleware.web/log-errors   {}
-                   :duct.middleware.web/log-requests {}}))))

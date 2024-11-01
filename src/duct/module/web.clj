@@ -32,8 +32,8 @@
                 :content-types true
                 :default-charset "utf-8"}}
 
-   :duct.middleware.web/log-requests {}
-   :duct.middleware.web/log-errors {}
+   :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
+   :duct.middleware.web/log-errors {:logger (ig/ref :duct/logger)}
    :duct.middleware.web/stacktrace {}
 
    :duct.middleware.web/not-found
