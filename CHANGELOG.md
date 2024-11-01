@@ -1,3 +1,7 @@
+## 0.8.1 (2024-11-01)
+
+* Added Integrant hierarchy and annotation files
+
 ## 0.8.0 (2024-11-01)
 
 * BREAKING CHANGE: converted library to use Integrant expansions

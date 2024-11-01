@@ -1,4 +1,4 @@
-(defproject org.duct-framework/module.web "0.8.0"
+(defproject org.duct-framework/module.web "0.8.1"
   :description "Duct module for running web applications"
   :url "https://github.com/duct-framework/module.web"
   :license {:name "Eclipse Public License"
