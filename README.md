@@ -27,23 +27,18 @@ To add this module to your configuration, add a reference to
 `:duct.module.web/api` if you want to develop a web service:
 
 ```edn
-{:duct.core/project-ns foo
- :duct.module.web/api  {}}
+{:duct.module.web/api {}}
 ```
 
 Or `:duct.module.web/site` if you want to develop a user-facing web
 application:
 
 ```edn
-{:duct.core/project-ns foo
- :duct.module.web/site {}}
+{:duct.module.web/site {}}
 ```
 
 Or `:duct.module/web` if you want the bare-bones approach and want to
 handle most things yourself.
-
-Note that the `:duct.core/project-ns` key must also be set, to allow
-the module to find the right resources.
 
 By default, the module uses the `:duct.server.http/jetty` key for the
 webserver, as supplied by the [server.http.jetty][] library. However,
