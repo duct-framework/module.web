@@ -1,3 +1,4 @@
 {:duct.module/web
  {:duct/vars
-  {port {:env PORT, :arg port, :type :int, :default 3000}}}}
+  {port {:env PORT, :arg port, :type :int, :default 3000
+         :doc "The HTTP server port (default: 3000)"}}}}
