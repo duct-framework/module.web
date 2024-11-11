@@ -82,7 +82,7 @@
           {:error-handler (ig/ref :duct.handler.static/not-found)}
           :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
           :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
-         (ig/expand {:duct.module.web/api {}}
+         (ig/expand {:duct.module/web {:features #{:api}}}
                     (ig/deprofile [:main])))))
 
 (deftest site-module-test
@@ -135,5 +135,5 @@
           {:error-handler (ig/ref :duct.handler.static/not-found)}
           :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
           :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
-         (ig/expand {:duct.module.web/site {}}
+         (ig/expand {:duct.module/web {:features #{:site}}}
                     (ig/deprofile [:main])))))
