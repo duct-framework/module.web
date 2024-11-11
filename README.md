@@ -24,21 +24,26 @@ Or to your Leiningen project file:
 ## Usage
 
 To add this module to your configuration, add a reference to
-`:duct.module.web/api` if you want to develop a web service:
+`:duct.module/web`:
 
 ```edn
-{:duct.module.web/api {}}
+{:duct.module/web {}}
 ```
 
-Or `:duct.module.web/site` if you want to develop a user-facing web
-application:
+To load in middleware and handlers appropriate to develop web services,
+add the `:api` keyword to the `:features` option:
 
 ```edn
-{:duct.module.web/site {}}
+{:duct.module/web {:features #{:api}}}
 ```
 
-Or `:duct.module/web` if you want the bare-bones approach and want to
-handle most things yourself.
+Or `:site` if you want to develop a user-facing web application:
+
+```edn
+{:duct.module/web {:features #{:site}}}
+```
+
+Or both if you want both sets of features combined.
 
 By default, the module uses the `:duct.server.http/jetty` key for the
 webserver, as supplied by the [server.http.jetty][] library. However,
