@@ -1,3 +1,8 @@
+## 0.9.0 (2024-11-11)
+
+* BREAKING CHANGE: removed ``:duct.module.web/site`` and `:duct.module.web/api`
+* Added `:features` key to `:duct.module/web` with `:api` and `:site` options
+
 ## 0.8.1 (2024-11-01)
 
 * Added Integrant hierarchy and annotation files
