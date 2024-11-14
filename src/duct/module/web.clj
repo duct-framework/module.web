@@ -8,27 +8,30 @@
 (defn- html-response [html]
   {:headers {"Content-Type" "text/html; charset=UTF-8"}, :body html})
 
-(defmethod ig/expand-key :duct.module/web [_ {:keys [features]}]
+(defmethod ig/expand-key :duct.module/web
+  [_ {:keys [features routes]}]
   (let [featureset (set features)
         api?       (featureset :api)
         site?      (featureset :site)]
     `{:duct.server.http/jetty
       {:port    ~(ig/var 'port)
        :logger  ~(ig/refset :duct/logger)
-       :handler ~(ig/ref :duct.handler/root)}
+       :handler ~(ig/ref :duct/router)}
 
-      :duct.handler/root
-      {:router ~(ig/ref :duct/router)
+      :duct.router/reitit
+      {:routes ~(or routes [])
+       ~@(when api? [:muuntaja {}]) ~@[]
        :middleware
-       [~(ig/ref :duct.middleware.web/not-found)
-        ~@(when api?  [(ig/ref :duct.middleware.web/format)])
-        ~@(when site? [(ig/ref :duct.middleware.web/webjars)])
+       [~@(when site? [(ig/ref :duct.middleware.web/webjars)])
         ~(ig/ref :duct.middleware.web/defaults)
         ~(ig/ref :duct.middleware.web/log-requests)
         ~(ig/ref :duct.middleware.web/log-errors)
         ~(ig/profile
           :repl (ig/ref :duct.middleware.web/stacktrace)
-          :main (ig/ref :duct.middleware.web/hide-errors))]}
+          :main (ig/ref :duct.middleware.web/hide-errors))]
+       :default-handler
+       {:not-found ~(ig/ref :duct.handler.static/not-found)
+        :method-not-allowed ~(ig/ref :duct.handler.static/method-not-allowed)}}
 
       :duct.middleware.web/defaults
       ~(if site?
@@ -56,11 +59,9 @@
       :duct.middleware.web/log-errors   {:logger ~(ig/ref :duct/logger)}
       :duct.middleware.web/stacktrace   {}
 
-      ~@(when api?  [:duct.middleware.web/format {}])
-      ~@(when site? [:duct.middleware.web/webjars {}])
+      ~@(when api?  [:duct.middleware.web/format {}]) ~@[]
+      ~@(when site? [:duct.middleware.web/webjars {}]) ~@[]
 
-      :duct.middleware.web/not-found
-      {:error-handler ~(ig/ref :duct.handler.static/not-found)}
       :duct.middleware.web/hide-errors
       {:error-handler ~(ig/ref :duct.handler.static/internal-server-error)}
 

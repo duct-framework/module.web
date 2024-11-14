@@ -5,14 +5,18 @@
             [integrant.core :as ig]))
 
 (deftest base-module-test
-  (is (= {:duct.handler/root
-          {:router (ig/ref :duct/router)
+  (is (= {:duct.router/reitit
+          {:routes []
            :middleware
-           [(ig/ref :duct.middleware.web/not-found)
-            (ig/ref :duct.middleware.web/defaults)
+           [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
-            (ig/ref :duct.middleware.web/hide-errors)]}
+            (ig/ref :duct.middleware.web/hide-errors)]
+           :default-handler
+           {:not-found
+            (ig/ref :duct.handler.static/not-found)
+            :method-not-allowed
+            (ig/ref :duct.handler.static/method-not-allowed)}}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
@@ -21,7 +25,7 @@
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
           {:port    (ig/var 'port)
-           :handler (ig/ref :duct.handler/root)
+           :handler (ig/ref :duct/router)
            :logger  (ig/refset :duct/logger)}
           :duct.handler.static/bad-request
           {:headers {"Content-Type" "text/plain; charset=UTF-8"}
@@ -38,23 +42,25 @@
           :duct.middleware.web/stacktrace {}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
-          :duct.middleware.web/not-found
-          {:error-handler (ig/ref :duct.handler.static/not-found)}
           :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
           :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
          (ig/expand {:duct.module/web {}}
                     (ig/deprofile [:main])))))
 
 (deftest api-module-test
-  (is (= {:duct.handler/root
-          {:router (ig/ref :duct/router)
+  (is (= {:duct.router/reitit
+          {:routes []
+           :muuntaja {}
            :middleware
-           [(ig/ref :duct.middleware.web/not-found)
-            (ig/ref :duct.middleware.web/format)
-            (ig/ref :duct.middleware.web/defaults)
+           [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
-            (ig/ref :duct.middleware.web/hide-errors)]}
+            (ig/ref :duct.middleware.web/hide-errors)]
+           :default-handler
+           {:not-found
+            (ig/ref :duct.handler.static/not-found)
+            :method-not-allowed
+            (ig/ref :duct.handler.static/method-not-allowed)}}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
@@ -63,7 +69,7 @@
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
           {:port    (ig/var 'port)
-           :handler (ig/ref :duct.handler/root)
+           :handler (ig/ref :duct/router)
            :logger  (ig/refset :duct/logger)}
           :duct.handler.static/bad-request
           {:body {:error :bad-request}}
@@ -78,30 +84,33 @@
           :duct.middleware.web/stacktrace {}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
-          :duct.middleware.web/not-found
-          {:error-handler (ig/ref :duct.handler.static/not-found)}
           :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
           :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
          (ig/expand {:duct.module/web {:features #{:api}}}
                     (ig/deprofile [:main])))))
 
 (deftest site-module-test
-  (is (= {:duct.handler/root
-          {:router (ig/ref :duct/router)
+  (is (= {:duct.router/reitit
+          {:routes []
            :middleware
-           [(ig/ref :duct.middleware.web/not-found)
-            (ig/ref :duct.middleware.web/webjars)
+           [(ig/ref :duct.middleware.web/webjars)
             (ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
-            (ig/ref :duct.middleware.web/hide-errors)]}
+            (ig/ref :duct.middleware.web/hide-errors)]
+           :default-handler
+           {:not-found
+            (ig/ref :duct.handler.static/not-found)
+            :method-not-allowed
+            (ig/ref :duct.handler.static/method-not-allowed)}}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true
                        :multipart  true
                        :nested     true
                        :keywordize true}
            :cookies   true
-           :session   {:flash true, :cookie-attrs {:http-only true, :same-site :strict}}
+           :session   {:flash true
+                       :cookie-attrs {:http-only true, :same-site :strict}}
            :security  {:anti-forgery         true
                        :frame-options        :sameorigin
                        :content-type-options :nosniff}
@@ -113,7 +122,7 @@
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
           {:port    (ig/var 'port)
-           :handler (ig/ref :duct.handler/root)
+           :handler (ig/ref :duct/router)
            :logger  (ig/refset :duct/logger)}
           :duct.middleware.web/webjars    {}
           :duct.middleware.web/stacktrace {}
@@ -131,8 +140,6 @@
            :body    (io/resource "duct/module/web/errors/500.html")}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
-          :duct.middleware.web/not-found
-          {:error-handler (ig/ref :duct.handler.static/not-found)}
           :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
           :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
          (ig/expand {:duct.module/web {:features #{:site}}}
