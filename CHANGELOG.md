@@ -1,6 +1,15 @@
+## 0.10.0 (2024-11-15)
+
+* BREAKING CHANGE: removed `:duct.handler/root`
+* BREAKING CHANGE: removed `:duct.middleware/not-found`
+* BREAKING CHANGE: removed `:duct.middleware/route-aliases`
+* BREAKING CHANGE: removed `:duct.middleware/format`
+* BREAKING CHANGE: removed `:duct.router/cascading`
+* Changed `:duct.module/web` to use Reitit router
+
 ## 0.9.0 (2024-11-11)
 
-* BREAKING CHANGE: removed ``:duct.module.web/site`` and `:duct.module.web/api`
+* BREAKING CHANGE: removed `:duct.module.web/site` and `:duct.module.web/api`
 * Added `:features` key to `:duct.module/web` with `:api` and `:site` options
 
 ## 0.8.1 (2024-11-01)
