@@ -43,31 +43,27 @@ Or `:site` if you want to develop a user-facing web application:
 {:duct.module/web {:features #{:site}}}
 ```
 
-Or both if you want both sets of features combined.
+Or include both if you want both sets of features combined.
 
-By default, the module uses the `:duct.server.http/jetty` key for the
-webserver, as supplied by the [server.http.jetty][] library. However,
-if a key deriving from `:duct.server/http` already exists in the
-configuration, the module will use that instead.
-
-Similarly, the module includes the `:duct.router/cascading` key for
-routing. This is a simple router that takes an ordered vector of
-handlers, and will return the first non-nil response for a given
-request.
-
-For example:
+By default, the module uses the [Reitit][] Ring router. This is
+available via the `:duct.router/reitit` key. For example:
 
 ```edn
-{:duct.router/cascading [#ig/ref :foo.endpoint/example1
-                         #ig/ref :foo.endpoint/example2]
- :foo.endpoint/example1 {}
- :foo.endpoint/example2 {}}
+{:duct.module/web {:features #{:site}}
+ :duct.router/reitit {:routes [["/" #ig/ref :app.example/handler]]}}
+ :app.example/handler {}
 ```
 
-If a key deriving from `:duct/router` exists in the configuration
-already, then that is used instead.
+You can also use the `:routes` key on the module:
 
-[server.http.jetty]: https://github.com/duct-framework/server.http.jetty
+```edn
+{:duct.module/web
+ {:features #{:site}
+  :routes [["/" #ig/ref :app.example/handler]]}
+ :app.example/handler {}}
+```
+
+[reitit][]: https://github.com/metosin/reitit
 
 ## License
 
