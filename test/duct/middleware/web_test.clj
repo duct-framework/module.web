@@ -1,6 +1,5 @@
 (ns duct.middleware.web-test
   (:require [clojure.test :refer :all]
-            [compojure.core :as compojure]
             [duct.logger :as logger]
             [duct.middleware.web :refer :all]
             [integrant.core :as ig]
@@ -77,37 +76,6 @@
       (let [handler (-> (fn [_ _ raise] (raise (Exception. "testing")))
                         (wrap-hide-errors err-handler))
             respond (promise)
-            raise   (promise)]
-        (handler (mock/request :get "/") respond raise)
-        (is (not (realized? raise)))
-        (is (= @respond response))))))
-
-(deftest test-wrap-not-found
-  (let [err-handler (make-error-handler "Not Found")
-        response    {:status 404, :headers {},  :body "Not Found"}]
-    (testing "synchronous"
-      (let [handler (wrap-not-found (constantly nil) err-handler)]
-        (is (= (handler (mock/request :get "/")) response))))
-
-    (testing "asynchronous"
-      (let [handler (wrap-not-found (fn [_ respond _] (respond nil)) err-handler)
-            respond (promise)
-            raise   (promise)]
-        (handler (mock/request :get "/") respond raise)
-        (is (not (realized? raise)))
-        (is (= @respond response))))))
-
-(deftest test-wrap-route-aliases
-  (let [response {:status  200
-                  :headers {"Content-Type" "text/html; charset=utf-8"}
-                  :body    "foo"}
-        handler  (-> (compojure/GET "/index.html" [] "foo")
-                     (wrap-route-aliases {"/" "/index.html"}))]
-    (testing "synchronous"
-      (is (= (handler (mock/request :get "/")) response)))
-
-    (testing "asynchronous"
-      (let [respond (promise)
             raise   (promise)]
         (handler (mock/request :get "/") respond raise)
         (is (not (realized? raise)))
