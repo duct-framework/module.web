@@ -16,7 +16,9 @@
            {:not-found
             (ig/ref :duct.handler.static/not-found)
             :method-not-allowed
-            (ig/ref :duct.handler.static/method-not-allowed)}}
+            (ig/ref :duct.handler.static/method-not-allowed)
+            :not-acceptable
+            (ig/ref :duct.handler.static/not-acceptable)}}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
@@ -36,6 +38,9 @@
           :duct.handler.static/method-not-allowed
           {:headers {"Content-Type" "text/plain; charset=UTF-8"}
            :body    "Method Not Allowed"}
+          :duct.handler.static/not-acceptable
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Not Acceptable"}
           :duct.handler.static/internal-server-error
           {:headers {"Content-Type" "text/plain; charset=UTF-8"}
            :body    "Internal Server Error"}
@@ -60,7 +65,9 @@
            {:not-found
             (ig/ref :duct.handler.static/not-found)
             :method-not-allowed
-            (ig/ref :duct.handler.static/method-not-allowed)}}
+            (ig/ref :duct.handler.static/method-not-allowed)
+            :not-acceptable
+            (ig/ref :duct.handler.static/not-acceptable)}}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
@@ -77,6 +84,8 @@
           {:body {:error :not-found}}
           :duct.handler.static/method-not-allowed
           {:body {:error :method-not-allowed}}
+          :duct.handler.static/not-acceptable
+          {:body {:error :not-acceptable}}
           :duct.handler.static/internal-server-error
           {:headers {"Content-Type" "application/json"}
            :body    (io/resource "duct/module/web/errors/500.json")}
@@ -102,7 +111,9 @@
            {:not-found
             (ig/ref :duct.handler.static/not-found)
             :method-not-allowed
-            (ig/ref :duct.handler.static/method-not-allowed)}}
+            (ig/ref :duct.handler.static/method-not-allowed)
+            :not-acceptable
+            (ig/ref :duct.handler.static/not-acceptable)}}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true
                        :multipart  true
@@ -135,6 +146,9 @@
           :duct.handler.static/method-not-allowed
           {:headers {"Content-Type" "text/html; charset=UTF-8"}
            :body    (io/resource "duct/module/web/errors/405.html")}
+          :duct.handler.static/not-acceptable
+          {:headers {"Content-Type" "text/html; charset=UTF-8"}
+           :body    (io/resource "duct/module/web/errors/406.html")}
           :duct.handler.static/internal-server-error
           {:headers {"Content-Type" "text/html; charset=UTF-8"}
            :body    (io/resource "duct/module/web/errors/500.html")}

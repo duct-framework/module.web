@@ -55,5 +55,8 @@
 (defmethod ig/init-key ::method-not-allowed [_ response]
   (make-handler (assoc response :status 405)))
 
+(defmethod ig/init-key ::not-acceptable [_ response]
+  (make-handler (assoc response :status 406)))
+
 (defmethod ig/init-key ::internal-server-error [_ response]
   (make-handler (assoc response :status 500)))

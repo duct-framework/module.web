@@ -31,7 +31,8 @@
           :main (ig/ref :duct.middleware.web/hide-errors))]
        :default-handler
        {:not-found ~(ig/ref :duct.handler.static/not-found)
-        :method-not-allowed ~(ig/ref :duct.handler.static/method-not-allowed)}}
+        :method-not-allowed ~(ig/ref :duct.handler.static/method-not-allowed)
+        :not-acceptable ~(ig/ref :duct.handler.static/not-acceptable)}}
 
       :duct.middleware.web/defaults
       ~(if site?
@@ -82,6 +83,12 @@
          site? (html-response (io/resource "duct/module/web/errors/405.html"))
          api?  {:body {:error :method-not-allowed}}
          :else (plaintext-response "Method Not Allowed"))
+
+      :duct.handler.static/not-acceptable
+      ~(cond
+         site? (html-response (io/resource "duct/module/web/errors/406.html"))
+         api?  {:body {:error :not-acceptable}}
+         :else (plaintext-response "Not Acceptable"))
 
       :duct.handler.static/internal-server-error
       ~(cond
