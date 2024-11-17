@@ -1,5 +1,6 @@
 (ns duct.middleware.web
-  (:require [duct.logger :as logger]
+  (:require [clojure.java.io :as io]
+            [duct.logger :as logger]
             [integrant.core :as ig]
             [ring.middleware.defaults :refer [wrap-defaults]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
@@ -74,7 +75,12 @@
 (defmethod ig/init-key ::hide-errors [_ {:keys [error-handler]}]
   #(wrap-hide-errors % error-handler))
 
+(defn- ensure-dirs-exist [dirs]
+  (doseq [dir dirs :let [f (io/file dir)] :when (not (.exists f))]
+    (.mkdirs f)))
+
 (defmethod ig/init-key ::defaults [_ defaults]
+  (ensure-dirs-exist (-> defaults :static :files))
   #(wrap-defaults % defaults))
 
 (defmethod ig/init-key ::webjars [_ {:keys [path] :or {path "/assets"}}]

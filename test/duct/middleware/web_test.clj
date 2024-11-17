@@ -3,7 +3,9 @@
             [duct.logger :as logger]
             [duct.middleware.web :refer :all]
             [integrant.core :as ig]
-            [ring.mock.request :as mock]))
+            [ring.mock.request :as mock])
+  (:import [java.nio.file Files]
+           [java.nio.file.attribute FileAttribute]))
 
 (defrecord TestLogger [logs]
   logger/Logger
@@ -80,3 +82,12 @@
         (handler (mock/request :get "/") respond raise)
         (is (not (realized? raise)))
         (is (= @respond response))))))
+
+(deftest test-wrap-defaults
+  (let [attrs   (make-array FileAttribute 0)
+        tempdir (Files/createTempDirectory "duct" attrs)]
+    (Files/delete tempdir)
+    (ig/init-key :duct.middleware.web/defaults
+                 {:static {:files [(str tempdir)]}})
+    (is (.exists (.toFile tempdir)))
+    (Files/deleteIfExists tempdir)))
