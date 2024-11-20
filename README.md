@@ -54,6 +54,8 @@ available via the `:duct.router/reitit` key. For example:
  :app.example/handler {}
 ```
 
+[reitit][]: https://github.com/metosin/reitit
+
 You can also use the `:routes` key on the module:
 
 ```edn
@@ -63,7 +65,29 @@ You can also use the `:routes` key on the module:
  :app.example/handler {}}
 ```
 
-[reitit][]: https://github.com/metosin/reitit
+This will automatically add appropriate refs and handler keys, so the above
+configuration can be written:
+
+```edn
+{:duct.module/web
+ {:features #{:site}
+  :routes [["/" :app.example/handler]]}}
+```
+
+It may be the case that you want all handlers to have a common configuration,
+such as providing a reference to a database. You do this easily with the
+`:handler-opts` key, which merges a supplied options map with the options for
+all the handlers referenced in the routes.
+
+For example:
+
+```edn
+{:duct.database/sql {:jdbcUrl "jdbc:sqlite:"}
+ :duct.module/web
+ {:features #{:site}
+  :handler-opts {:db #ig/ref duct.database/sql}
+  :routes [["/" :app.example/handler]]}}
+```
 
 ## License
 
