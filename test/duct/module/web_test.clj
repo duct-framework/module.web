@@ -158,3 +158,62 @@
           :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
          (ig/expand {:duct.module/web {:features #{:site}}}
                     (ig/deprofile [:main])))))
+
+(deftest routes-transform-test
+  (is (= {:duct.router/reitit
+          {:routes
+           [["/one" {:get (ig/ref ::handler1)}]
+            ["/two" {:name ::handler2, :handler (ig/ref ::handler2)}]
+            ["/three/" ["four" {:handler (ig/ref ::handler3)}]]]
+           :middleware
+           [(ig/ref :duct.middleware.web/defaults)
+            (ig/ref :duct.middleware.web/log-requests)
+            (ig/ref :duct.middleware.web/log-errors)
+            (ig/ref :duct.middleware.web/hide-errors)]
+           :default-handler
+           {:not-found
+            (ig/ref :duct.handler.static/not-found)
+            :method-not-allowed
+            (ig/ref :duct.handler.static/method-not-allowed)
+            :not-acceptable
+            (ig/ref :duct.handler.static/not-acceptable)}}
+          :duct.middleware.web/defaults
+          {:params    {:urlencoded true, :keywordize true}
+           :responses {:not-modified-responses true
+                       :absolute-redirects     true
+                       :content-types          true
+                       :default-charset        "utf-8"}}
+          :duct.server.http/jetty
+          {:port    (ig/var 'port)
+           :handler (ig/ref :duct/router)
+           :logger  (ig/refset :duct/logger)}
+          ::handler1 {:name :foo}
+          ::handler2 {:name :foo}
+          ::handler3 {:name :foo}
+          :duct.handler.static/bad-request
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Bad Request"}
+          :duct.handler.static/not-found
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Not Found"}
+          :duct.handler.static/method-not-allowed
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Method Not Allowed"}
+          :duct.handler.static/not-acceptable
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Not Acceptable"}
+          :duct.handler.static/internal-server-error
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Internal Server Error"}
+          :duct.middleware.web/stacktrace {}
+          :duct.middleware.web/hide-errors
+          {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
+          :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
+          :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
+         (ig/expand {:duct.module/web
+                     {:handler-opts {:name :foo}
+                      :routes
+                      [["/one" {:get ::handler1}]
+                       ["/two" ::handler2]
+                       ["/three/" ["four" {:handler ::handler3}]]]}}
+                    (ig/deprofile [:main])))))

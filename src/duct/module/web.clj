@@ -8,18 +8,58 @@
 (defn- html-response [html]
   {:headers {"Content-Type" "text/html; charset=UTF-8"}, :body html})
 
+(defn- walk-route-data [route f]
+  (if (and (vector? route) (seq route))
+    (if (vector? (first route))
+      (mapv #(walk-route-data % f) route)
+      (let [[path data] route]
+        [path (cond
+                (vector? data)  (walk-route-data data f)
+                (record? data)  data
+                (map? data)     (f data)
+                (keyword? data) (f {:name data})
+                :else           data)]))
+    route))
+
+(defn- route-data-seq [route]
+  (when (vector? route)
+    (if (vector? (first route))
+      (mapcat route-data-seq route)
+      (let [[_ data] route]
+        (cond
+          (vector? data)  (route-data-seq data)
+          (record? data)  nil
+          (map? data)     (list data)
+          (keyword? data) (list {:name data}))))))
+
+(def ^:private handler-keys
+  #{:handler :get :head :patch :delete :options :post :put :trace})
+
+(defn- add-ref-to-key [m k]
+  (if (qualified-keyword? (m k)) (update m k ig/ref) m))
+
+(defn- add-refs-to-route-data [route-data]
+  (if (some route-data handler-keys)
+    (reduce add-ref-to-key route-data handler-keys)
+    (assoc route-data :handler (ig/ref (:name route-data)))))
+
+(defn- find-handlers-in-route-data [route-data]
+  (->> handler-keys (keep route-data) (filter ig/ref?) (map :key)))
+
 (defmethod ig/expand-key :duct.module/web
-  [_ {:keys [features routes]}]
+  [_ {:keys [features routes handler-opts]
+      :or   {routes [], handler-opts {}}}]
   (let [featureset (set features)
         api?       (featureset :api)
-        site?      (featureset :site)]
+        site?      (featureset :site)
+        routes     (walk-route-data routes add-refs-to-route-data)]
     `{:duct.server.http/jetty
       {:port    ~(ig/var 'port)
        :logger  ~(ig/refset :duct/logger)
        :handler ~(ig/ref :duct/router)}
 
       :duct.router/reitit
-      {:routes ~(or routes [])
+      {:routes ~routes
        ~@(when api? [:muuntaja {}]) ~@[]
        :middleware
        [~@(when site? [(ig/ref :duct.middleware.web/webjars)])
@@ -30,9 +70,9 @@
           :repl (ig/ref :duct.middleware.web/stacktrace)
           :main (ig/ref :duct.middleware.web/hide-errors))]
        :default-handler
-       {:not-found ~(ig/ref :duct.handler.static/not-found)
+       {:not-found          ~(ig/ref :duct.handler.static/not-found)
         :method-not-allowed ~(ig/ref :duct.handler.static/method-not-allowed)
-        :not-acceptable ~(ig/ref :duct.handler.static/not-acceptable)}}
+        :not-acceptable     ~(ig/ref :duct.handler.static/not-acceptable)}}
 
       :duct.middleware.web/defaults
       ~(if site?
@@ -60,8 +100,13 @@
       :duct.middleware.web/log-errors   {:logger ~(ig/ref :duct/logger)}
       :duct.middleware.web/stacktrace   {}
 
-      ~@(when api?  [:duct.middleware.web/format {}]) ~@[]
+      ~@(when api?  [:duct.middleware.web/format {}])  ~@[]
       ~@(when site? [:duct.middleware.web/webjars {}]) ~@[]
+
+      ~@(->> (route-data-seq routes)
+             (mapcat find-handlers-in-route-data)
+             (mapcat (fn [key] [key handler-opts])))
+      ~@[]
 
       :duct.middleware.web/hide-errors
       {:error-handler ~(ig/ref :duct.handler.static/internal-server-error)}
