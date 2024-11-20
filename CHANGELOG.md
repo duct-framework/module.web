@@ -1,3 +1,9 @@
+## 0.11.0 (2024-11-20)
+
+* Added automatic refs and handlers to `:routes` key
+* Added check to create missing file directories
+* Added '406 Not Acceptable' error handler
+
 ## 0.10.0 (2024-11-15)
 
 * BREAKING CHANGE: removed `:duct.handler/root`
