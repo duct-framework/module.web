@@ -1,3 +1,7 @@
+## 0.11.1 (2024-11-29)
+
+* Added `:duct.middleware.web/hiccup`
+
 ## 0.11.0 (2024-11-20)
 
 * Added automatic refs and handlers to `:routes` key

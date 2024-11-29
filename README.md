@@ -15,11 +15,11 @@ accidental upgrades. The version prior to this change was: `0.7.4`.
 
 Add the following dependency to your deps.edn file:
 
-    org.duct-framework/module.web {:mvn/version "0.11.0"}
+    org.duct-framework/module.web {:mvn/version "0.11.1"}
 
 Or to your Leiningen project file:
 
-    [org.duct-framework/module.web "0.11.0"]
+    [org.duct-framework/module.web "0.11.1"]
 
 ## Usage
 
