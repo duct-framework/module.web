@@ -8,6 +8,7 @@
                  [org.duct-framework/server.http.jetty "0.3.0"]
                  [org.duct-framework/router.reitit "0.2.0"]
                  [integrant "0.13.1"]
+                 [hiccup "2.0.0-RC4"]
                  [org.slf4j/slf4j-nop "2.0.16"]
                  [org.webjars/normalize.css "5.0.0"]
                  [ring/ring-core "1.13.0"]

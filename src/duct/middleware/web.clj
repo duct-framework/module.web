@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [duct.logger :as logger]
             [integrant.core :as ig]
+            [hiccup2.core :as hic]
             [ring.middleware.defaults :refer [wrap-defaults]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
             [ring.middleware.webjars :refer [wrap-webjars]]
@@ -67,6 +68,30 @@
        (catch Throwable _
          (respond (internal-error (error-handler request))))))))
 
+(defn- hiccup-response [response hiccup-renderer]
+  (let [response (if (vector? response)
+                   {:status 200, :headers {}, :body response}
+                   response)]
+    (if (vector? (:body response))
+      (-> response
+          (update :body #(str "<!DOCTYPE html>\n" (hiccup-renderer %)))
+          (assoc-in [:headers "Content-Type"] "text/html;charset=UTF-8")
+          (update :status #(or % 200)))
+      response)))
+
+(defn wrap-hiccup
+  "Middleware that renders vectors as HTML. The vector can either be the only
+  response from the handler, or on the body key of the response map. Requires
+  a function that converts Hiccup vectors into HTML."
+  ([handler]
+   (wrap-hiccup handler #(hic/html {:mode :html} %)))
+  ([handler hiccup-renderer]
+   (fn
+     ([request]
+      (some-> (handler request) (hiccup-response hiccup-renderer)))
+     ([request respond raise]
+      (handler request (comp respond hiccup-response) raise)))))
+
 (defmethod ig/init-key ::log-requests
   [_ {:keys [logger options]}]
   #(wrap-log-requests % logger (dissoc options :logger)))
@@ -90,3 +115,6 @@
 
 (defmethod ig/init-key ::stacktrace [_ options]
   #(wrap-stacktrace % options))
+
+(defmethod ig/init-key ::hiccup [_ {:keys [hiccup-renderer]}]
+  (if hiccup-renderer #(wrap-hiccup % hiccup-renderer) wrap-hiccup))

@@ -61,6 +61,8 @@
       :duct.router/reitit
       {:routes ~routes
        ~@(when api? [:muuntaja {}]) ~@[]
+       ~@(when site?
+           [:data {:middleware [(ig/ref :duct.middleware.web/hiccup)]}]) ~@[]
        :middleware
        [~@(when site? [(ig/ref :duct.middleware.web/webjars)])
         ~(ig/ref :duct.middleware.web/defaults)
@@ -102,6 +104,7 @@
 
       ~@(when api?  [:duct.middleware.web/format {}])  ~@[]
       ~@(when site? [:duct.middleware.web/webjars {}]) ~@[]
+      ~@(when site? [:duct.middleware.web/hiccup {}])  ~@[]
 
       ~@(->> (route-data-seq routes)
              (mapcat find-handlers-in-route-data)

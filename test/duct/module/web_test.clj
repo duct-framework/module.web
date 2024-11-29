@@ -101,6 +101,7 @@
 (deftest site-module-test
   (is (= {:duct.router/reitit
           {:routes []
+           :data {:middleware [(ig/ref :duct.middleware.web/hiccup)]}
            :middleware
            [(ig/ref :duct.middleware.web/webjars)
             (ig/ref :duct.middleware.web/defaults)
@@ -136,6 +137,7 @@
            :handler (ig/ref :duct/router)
            :logger  (ig/refset :duct/logger)}
           :duct.middleware.web/webjars    {}
+          :duct.middleware.web/hiccup     {}
           :duct.middleware.web/stacktrace {}
           :duct.handler.static/bad-request
           {:headers {"Content-Type" "text/html; charset=UTF-8"}

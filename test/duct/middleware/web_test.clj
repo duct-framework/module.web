@@ -91,3 +91,21 @@
                  {:static {:files [(str tempdir)]}})
     (is (.exists (.toFile tempdir)))
     (Files/deleteIfExists tempdir)))
+
+(deftest test-wrap-hiccup
+  (is (= {:status  200
+          :headers {"Content-Type" "text/html;charset=UTF-8"}
+          :body    "<!DOCTYPE html>\n<title>foo</title>"}
+         ((wrap-hiccup (constantly [:title "foo"])) {})))
+  (is (= {:status  200
+          :headers {"Content-Type" "text/html;charset=UTF-8"}
+          :body    "<!DOCTYPE html>\n<title>foo</title>"}
+         ((wrap-hiccup (constantly {:body [:title "foo"]})) {})))
+  (is (= {:status  201
+          :headers {"Content-Type" "text/html;charset=UTF-8"}
+          :body    "<!DOCTYPE html>\n<title>foo</title>"}
+         ((wrap-hiccup (constantly {:status 201, :body [:title "foo"]})) {})))
+  (let [response {:status  200
+                  :headers {"Content-Type" "text/plain;charset=UTF-8"}
+                  :body    "Foobar"}]
+    (is (= response ((wrap-hiccup (constantly response)) {})))))
