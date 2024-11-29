@@ -62,8 +62,10 @@
        (catch Throwable _ (internal-error (error-handler request)))))
     ([request respond raise]
      (try
-       (handler request respond (fn [_] (respond (internal-error (error-handler request)))))
-       (catch Throwable _ (respond (internal-error (error-handler request))))))))
+       (handler request respond
+                (fn [_] (respond (internal-error (error-handler request)))))
+       (catch Throwable _
+         (respond (internal-error (error-handler request))))))))
 
 (defmethod ig/init-key ::log-requests
   [_ {:keys [logger options]}]
