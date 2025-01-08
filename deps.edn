@@ -4,6 +4,7 @@
         org.duct-framework/server.http.jetty {:mvn/version "0.3.0"}
         org.duct-framework/router.reitit {:mvn/version "0.3.0"}
         integrant/integrant {:mvn/version "0.13.1"}
+        hiccup/hiccup {:mvn/version "2.0.0-RC4"}
         org.slf4j/slf4j-nop {:mvn/version "2.0.16"}
         org.webjars/normalize.css {:mvn/version "5.0.0"}
         ring/ring-core {:mvn/version "1.13.0"}
