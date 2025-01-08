@@ -1,3 +1,10 @@
+## 0.12.0 (2025-01-08)
+
+* Factored out `:duct.handler/static` into a separate handler library
+* Updated Duct Reitit router library
+* Replaced Ring file middleware with `:duct.handler/file`
+* Replaced Ring resource middleware with `:duct.handler/resource`
+
 ## 0.11.1 (2024-11-29)
 
 * Added `:duct.middleware.web/hiccup`
