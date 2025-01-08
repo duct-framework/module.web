@@ -1,7 +1,8 @@
 {:deps {org.clojure/clojure {:mvn/version "1.11.4"}
         org.duct-framework/logger {:mvn/version "0.4.0"}
+        org.duct-framework/handler {:mvn/version "0.1.0"}
         org.duct-framework/server.http.jetty {:mvn/version "0.3.0"}
-        org.duct-framework/router.reitit {:mvn/version "0.2.0"}
+        org.duct-framework/router.reitit {:mvn/version "0.3.0"}
         integrant/integrant {:mvn/version "0.13.1"}
         org.slf4j/slf4j-nop {:mvn/version "2.0.16"}
         org.webjars/normalize.css {:mvn/version "5.0.0"}

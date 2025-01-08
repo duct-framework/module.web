@@ -12,13 +12,7 @@
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
             (ig/ref :duct.middleware.web/hide-errors)]
-           :default-handler
-           {:not-found
-            (ig/ref :duct.handler.static/not-found)
-            :method-not-allowed
-            (ig/ref :duct.handler.static/method-not-allowed)
-            :not-acceptable
-            (ig/ref :duct.handler.static/not-acceptable)}}
+           :handlers [(ig/ref :duct.handler.reitit/default)]}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
@@ -29,6 +23,13 @@
           {:port    (ig/var 'port)
            :handler (ig/ref :duct/router)
            :logger  (ig/refset :duct/logger)}
+          :duct.handler.reitit/default
+          {:not-found
+           (ig/ref :duct.handler.static/not-found)
+           :method-not-allowed
+           (ig/ref :duct.handler.static/method-not-allowed)
+           :not-acceptable
+           (ig/ref :duct.handler.static/not-acceptable)}
           :duct.handler.static/bad-request
           {:headers {"Content-Type" "text/plain; charset=UTF-8"}
            :body    "Bad Request"}
@@ -61,13 +62,7 @@
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
             (ig/ref :duct.middleware.web/hide-errors)]
-           :default-handler
-           {:not-found
-            (ig/ref :duct.handler.static/not-found)
-            :method-not-allowed
-            (ig/ref :duct.handler.static/method-not-allowed)
-            :not-acceptable
-            (ig/ref :duct.handler.static/not-acceptable)}}
+           :handlers [(ig/ref :duct.handler.reitit/default)]}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
@@ -78,6 +73,13 @@
           {:port    (ig/var 'port)
            :handler (ig/ref :duct/router)
            :logger  (ig/refset :duct/logger)}
+          :duct.handler.reitit/default
+          {:not-found
+           (ig/ref :duct.handler.static/not-found)
+           :method-not-allowed
+           (ig/ref :duct.handler.static/method-not-allowed)
+           :not-acceptable
+           (ig/ref :duct.handler.static/not-acceptable)}
           :duct.handler.static/bad-request
           {:body {:error :bad-request}}
           :duct.handler.static/not-found
@@ -108,13 +110,10 @@
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
             (ig/ref :duct.middleware.web/hide-errors)]
-           :default-handler
-           {:not-found
-            (ig/ref :duct.handler.static/not-found)
-            :method-not-allowed
-            (ig/ref :duct.handler.static/method-not-allowed)
-            :not-acceptable
-            (ig/ref :duct.handler.static/not-acceptable)}}
+           :handlers
+           [(ig/ref :duct.handler/file)
+            (ig/ref :duct.handler/resource)
+            (ig/ref :duct.handler.reitit/default)]}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true
                        :multipart  true
@@ -126,8 +125,6 @@
            :security  {:anti-forgery         true
                        :frame-options        :sameorigin
                        :content-type-options :nosniff}
-           :static    {:resources ["duct/module/web/public"]
-                       :files ["static"]}
            :responses {:not-modified-responses true
                        :absolute-redirects     true
                        :content-types          true
@@ -139,6 +136,17 @@
           :duct.middleware.web/webjars    {}
           :duct.middleware.web/hiccup     {}
           :duct.middleware.web/stacktrace {}
+          :duct.handler/file
+          {:paths {"/" {:root "static"}}}
+          :duct.handler/resource
+          {:paths {"/" {:root "duct/module/web/public"}}}
+          :duct.handler.reitit/default
+          {:not-found
+           (ig/ref :duct.handler.static/not-found)
+           :method-not-allowed
+           (ig/ref :duct.handler.static/method-not-allowed)
+           :not-acceptable
+           (ig/ref :duct.handler.static/not-acceptable)}
           :duct.handler.static/bad-request
           {:headers {"Content-Type" "text/html; charset=UTF-8"}
            :body    (io/resource "duct/module/web/errors/400.html")}
@@ -172,13 +180,7 @@
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
             (ig/ref :duct.middleware.web/hide-errors)]
-           :default-handler
-           {:not-found
-            (ig/ref :duct.handler.static/not-found)
-            :method-not-allowed
-            (ig/ref :duct.handler.static/method-not-allowed)
-            :not-acceptable
-            (ig/ref :duct.handler.static/not-acceptable)}}
+           :handlers [(ig/ref :duct.handler.reitit/default)]}
           :duct.middleware.web/defaults
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
@@ -192,6 +194,13 @@
           ::handler1 {:name :foo}
           ::handler2 {:name :foo}
           ::handler3 {:name :foo}
+          :duct.handler.reitit/default
+          {:not-found
+           (ig/ref :duct.handler.static/not-found)
+           :method-not-allowed
+           (ig/ref :duct.handler.static/method-not-allowed)
+           :not-acceptable
+           (ig/ref :duct.handler.static/not-acceptable)}
           :duct.handler.static/bad-request
           {:headers {"Content-Type" "text/plain; charset=UTF-8"}
            :body    "Bad Request"}

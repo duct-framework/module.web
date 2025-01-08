@@ -71,10 +71,11 @@
         ~(ig/profile
           :repl (ig/ref :duct.middleware.web/stacktrace)
           :main (ig/ref :duct.middleware.web/hide-errors))]
-       :default-handler
-       {:not-found          ~(ig/ref :duct.handler.static/not-found)
-        :method-not-allowed ~(ig/ref :duct.handler.static/method-not-allowed)
-        :not-acceptable     ~(ig/ref :duct.handler.static/not-acceptable)}}
+       :handlers
+       [~@(when site?
+            [(ig/ref :duct.handler/file)
+             (ig/ref :duct.handler/resource)])
+        ~(ig/ref :duct.handler.reitit/default)]}
 
       :duct.middleware.web/defaults
       ~(if site?
@@ -86,8 +87,6 @@
           :security  {:anti-forgery         true
                       :frame-options        :sameorigin
                       :content-type-options :nosniff}
-          :static    {:resources ["duct/module/web/public"]
-                      :files     ["static"]}
           :responses {:not-modified-responses true
                       :absolute-redirects     true
                       :content-types          true
@@ -113,6 +112,18 @@
 
       :duct.middleware.web/hide-errors
       {:error-handler ~(ig/ref :duct.handler.static/internal-server-error)}
+
+      ~@(when site?
+          [:duct.handler/file
+           {:paths {"/" {:root "static"}}}
+           :duct.handler/resource
+           {:paths {"/" {:root "duct/module/web/public"}}}])
+      ~@[]
+
+      :duct.handler.reitit/default
+      {:not-found          ~(ig/ref :duct.handler.static/not-found)
+       :method-not-allowed ~(ig/ref :duct.handler.static/method-not-allowed)
+       :not-acceptable     ~(ig/ref :duct.handler.static/not-acceptable)}
 
       :duct.handler.static/bad-request
       ~(cond
