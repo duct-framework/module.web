@@ -1,3 +1,7 @@
+## 0.12.1 (2025-01-11)
+
+* Updated Duct handler dependency
+
 ## 0.12.0 (2025-01-08)
 
 * Factored out `:duct.handler/static` into a separate handler library
