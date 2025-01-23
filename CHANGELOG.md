@@ -1,3 +1,7 @@
+## 0.12.2 (2025-01-23)
+
+* Fixed middleware for module when using the `:api` feature
+
 ## 0.12.1 (2025-01-11)
 
 * Updated Duct handler dependency
