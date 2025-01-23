@@ -101,7 +101,6 @@
       :duct.middleware.web/log-errors   {:logger ~(ig/ref :duct/logger)}
       :duct.middleware.web/stacktrace   {}
 
-      ~@(when api?  [:duct.middleware.web/format {}])  ~@[]
       ~@(when site? [:duct.middleware.web/webjars {}]) ~@[]
       ~@(when site? [:duct.middleware.web/hiccup {}])  ~@[]
 

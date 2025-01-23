@@ -91,7 +91,6 @@
           :duct.handler.static/internal-server-error
           {:headers {"Content-Type" "application/json"}
            :body    (io/resource "duct/module/web/errors/500.json")}
-          :duct.middleware.web/format     {}
           :duct.middleware.web/stacktrace {}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
