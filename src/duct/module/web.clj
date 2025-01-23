@@ -60,9 +60,9 @@
 
       :duct.router/reitit
       {:routes ~routes
-       ~@(when api? [:muuntaja {}]) ~@[]
-       ~@(when site?
-           [:data {:middleware [(ig/ref :duct.middleware.web/hiccup)]}]) ~@[]
+       :data {~@(when api? [:muuntaja {}]) ~@[]
+              ~@(when site?
+                  [:middleware [(ig/ref :duct.middleware.web/hiccup)]]) ~@[]}
        :middleware
        [~@(when site? [(ig/ref :duct.middleware.web/webjars)])
         ~(ig/ref :duct.middleware.web/defaults)

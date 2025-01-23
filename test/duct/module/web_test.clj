@@ -7,6 +7,7 @@
 (deftest base-module-test
   (is (= {:duct.router/reitit
           {:routes []
+           :data {}
            :middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
@@ -56,7 +57,7 @@
 (deftest api-module-test
   (is (= {:duct.router/reitit
           {:routes []
-           :muuntaja {}
+           :data {:muuntaja {}}
            :middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
@@ -174,6 +175,7 @@
            [["/one" {:get (ig/ref ::handler1)}]
             ["/two" {:name ::handler2, :handler (ig/ref ::handler2)}]
             ["/three/" ["four" {:handler (ig/ref ::handler3)}]]]
+           :data {}
            :middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
