@@ -1,3 +1,8 @@
+## 0.12.3 (2025-01-24)
+
+* Updated Ring-Defaults dependency and `:site` defaults
+* Fixed location of `:muuntaja` key set by module
+
 ## 0.12.2 (2025-01-23)
 
 * Fixed middleware for module when using the `:api` feature
