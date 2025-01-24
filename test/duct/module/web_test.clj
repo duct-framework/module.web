@@ -122,13 +122,14 @@
            :cookies   true
            :session   {:flash true
                        :cookie-attrs {:http-only true, :same-site :strict}}
-           :security  {:anti-forgery         true
-                       :frame-options        :sameorigin
+           :security  {:anti-forgery  {:safe-header "X-Ring-Anti-Forgery"}
+                       :frame-options :sameorigin
                        :content-type-options :nosniff}
            :responses {:not-modified-responses true
                        :absolute-redirects     true
                        :content-types          true
-                       :default-charset        "utf-8"}}
+                       :default-charset        "utf-8"}
+           :websocket {:keepalive true}}
           :duct.server.http/jetty
           {:port    (ig/var 'port)
            :handler (ig/ref :duct/router)
