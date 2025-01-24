@@ -9,5 +9,5 @@
         org.webjars/normalize.css {:mvn/version "5.0.0"}
         ring/ring-core {:mvn/version "1.13.0"}
         ring/ring-devel {:mvn/version "1.13.0"}
-        ring/ring-defaults {:mvn/version "0.5.0"}
+        ring/ring-defaults {:mvn/version "0.6.0"}
         ring-webjars/ring-webjars {:mvn/version "0.3.0"}}}

@@ -14,7 +14,7 @@
                  [org.webjars/normalize.css "5.0.0"]
                  [ring/ring-core "1.13.0"]
                  [ring/ring-devel "1.13.0"]
-                 [ring/ring-defaults "0.5.0"]
+                 [ring/ring-defaults "0.6.0"]
                  [ring-webjars "0.3.0"]]
   :plugins [[eftest "0.6.0"]]
   :profiles
