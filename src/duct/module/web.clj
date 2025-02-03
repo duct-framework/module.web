@@ -32,19 +32,29 @@
           (map? data)     (list data)
           (keyword? data) (list {:name data}))))))
 
-(def ^:private handler-keys
-  #{:handler :get :head :patch :delete :options :post :put :trace})
+(def ^:private request-methods
+  #{:get :head :patch :delete :options :post :put :trace})
 
-(defn- add-ref-to-key [m k]
-  (if (qualified-keyword? (m k)) (update m k ig/ref) m))
+(def ^:private handler-indexes
+  (set (concat [[:handler]]
+               (map vector request-methods)
+               (map (fn [m] [m :handler]) request-methods))))
+
+(defn- add-ref-to-key [m ks]
+  (if (qualified-keyword? (get-in m ks))
+    (update-in m ks ig/ref)
+    m))
 
 (defn- add-refs-to-route-data [route-data]
-  (if (some route-data handler-keys)
-    (reduce add-ref-to-key route-data handler-keys)
+  (if (some #(get-in route-data %) handler-indexes)
+    (reduce add-ref-to-key route-data handler-indexes)
     (assoc route-data :handler (ig/ref (:name route-data)))))
 
 (defn- find-handlers-in-route-data [route-data]
-  (->> handler-keys (keep route-data) (filter ig/ref?) (map :key)))
+  (->> handler-indexes
+       (keep #(get-in route-data %))
+       (filter ig/ref?)
+       (map :key)))
 
 (defmethod ig/expand-key :duct.module/web
   [_ {:keys [features routes handler-opts]
