@@ -1,3 +1,7 @@
+## 0.12.4 (2025-02-03)
+
+* Fixed transform of route `:handler` keys
+
 ## 0.12.3 (2025-01-24)
 
 * Updated Ring-Defaults dependency and `:site` defaults
