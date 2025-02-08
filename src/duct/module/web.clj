@@ -70,7 +70,8 @@
 
       :duct.router/reitit
       {:routes ~routes
-       :data {~@(when api? [:muuntaja {}]) ~@[]
+       :data {~@(when api?
+                  [:muuntaja {}, :coercion :malli]) ~@[]
               ~@(when site?
                   [:middleware [(ig/ref :duct.middleware.web/hiccup)]]) ~@[]}
        :middleware

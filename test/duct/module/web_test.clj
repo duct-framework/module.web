@@ -57,7 +57,7 @@
 (deftest api-module-test
   (is (= {:duct.router/reitit
           {:routes []
-           :data {:muuntaja {}}
+           :data {:muuntaja {}, :coercion :malli}
            :middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
