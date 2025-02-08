@@ -1,3 +1,7 @@
+## 0.12.5 (2025-02-08)
+
+* Added Malli coercion to module when using `:api` feature
+
 ## 0.12.4 (2025-02-03)
 
 * Fixed transform of route `:handler` keys
