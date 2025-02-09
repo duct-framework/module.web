@@ -54,7 +54,7 @@ available via the `:duct.router/reitit` key. For example:
  :app.example/handler {}
 ```
 
-[reitit][]: https://github.com/metosin/reitit
+[reitit]: https://github.com/metosin/reitit
 
 You can also use the `:routes` key on the module:
 
