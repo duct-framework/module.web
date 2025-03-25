@@ -1,3 +1,7 @@
+## 0.12.6 (2025-03-25)
+
+* Updated dependencies
+
 ## 0.12.5 (2025-02-08)
 
 * Added Malli coercion to module when using `:api` feature
