@@ -2,12 +2,12 @@
         org.duct-framework/logger {:mvn/version "0.4.0"}
         org.duct-framework/handler {:mvn/version "0.1.1"}
         org.duct-framework/server.http.jetty {:mvn/version "0.3.0"}
-        org.duct-framework/router.reitit {:mvn/version "0.3.0"}
+        org.duct-framework/router.reitit {:mvn/version "0.4.0"}
         integrant/integrant {:mvn/version "0.13.1"}
-        hiccup/hiccup {:mvn/version "2.0.0-RC4"}
-        org.slf4j/slf4j-nop {:mvn/version "2.0.16"}
+        hiccup/hiccup {:mvn/version "2.0.0-RC5"}
+        org.slf4j/slf4j-nop {:mvn/version "2.0.17"}
         org.webjars/normalize.css {:mvn/version "5.0.0"}
-        ring/ring-core {:mvn/version "1.13.0"}
-        ring/ring-devel {:mvn/version "1.13.0"}
+        ring/ring-core {:mvn/version "1.14.1"}
+        ring/ring-devel {:mvn/version "1.14.1"}
         ring/ring-defaults {:mvn/version "0.6.0"}
         ring-webjars/ring-webjars {:mvn/version "0.3.0"}}}
