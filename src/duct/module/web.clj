@@ -70,11 +70,12 @@
 
       :duct.router/reitit
       {:routes ~routes
-       :data {~@(when api?
-                  [:muuntaja {}, :coercion :malli]) ~@[]
-              ~@(when site?
-                  [:middleware [(ig/ref :duct.middleware.web/hiccup)]]) ~@[]}
-       :middleware
+       :data
+       {~@(when api?
+            [:muuntaja {}, :coercion :malli]) ~@[]
+        ~@(when site?
+            [:module-middleware [(ig/ref :duct.middleware.web/hiccup)]]) ~@[]}
+       :module-middleware
        [~@(when site? [(ig/ref :duct.middleware.web/webjars)])
         ~(ig/ref :duct.middleware.web/defaults)
         ~(ig/ref :duct.middleware.web/log-requests)

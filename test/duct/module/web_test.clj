@@ -8,7 +8,7 @@
   (is (= {:duct.router/reitit
           {:routes []
            :data {}
-           :middleware
+           :module-middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
@@ -58,7 +58,7 @@
   (is (= {:duct.router/reitit
           {:routes []
            :data {:muuntaja {}, :coercion :malli}
-           :middleware
+           :module-middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
@@ -103,8 +103,9 @@
 (deftest site-module-test
   (is (= {:duct.router/reitit
           {:routes []
-           :data {:middleware [(ig/ref :duct.middleware.web/hiccup)]}
-           :middleware
+           :data
+           {:module-middleware [(ig/ref :duct.middleware.web/hiccup)]}
+           :module-middleware
            [(ig/ref :duct.middleware.web/webjars)
             (ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
@@ -178,7 +179,7 @@
             ["/three/" ["four" {:handler (ig/ref ::handler3)}]]
             ["/five" {:post {:handler (ig/ref ::handler4)}}]]
            :data {}
-           :middleware
+           :module-middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
