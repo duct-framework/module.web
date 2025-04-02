@@ -1,3 +1,8 @@
+## 0.12.7 (2025-04-02)
+
+* Changed router `:middleware` key to `:module-middleware`
+* Updated dependencies
+
 ## 0.12.6 (2025-03-25)
 
 * Updated dependencies
