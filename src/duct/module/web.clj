@@ -1,5 +1,6 @@
 (ns duct.module.web
   (:require [clojure.java.io :as io]
+            [com.rpl.specter :as s]
             [integrant.core :as ig]))
 
 (defn- plaintext-response [text]
@@ -8,53 +9,32 @@
 (defn- html-response [html]
   {:headers {"Content-Type" "text/html; charset=UTF-8"}, :body html})
 
-(defn- walk-route-data [route f]
-  (if (and (vector? route) (seq route))
-    (if (vector? (first route))
-      (mapv #(walk-route-data % f) route)
-      (let [[path data] route]
-        [path (cond
-                (vector? data)  (walk-route-data data f)
-                (record? data)  data
-                (map? data)     (f data)
-                (keyword? data) (f {:name data})
-                :else           data)]))
-    route))
+(defn- nested-route? [route]
+  (and (vector? route) (some vector? route)))
 
-(defn- route-data-seq [route]
-  (when (vector? route)
-    (if (vector? (first route))
-      (mapcat route-data-seq route)
-      (let [[_ data] route]
-        (cond
-          (vector? data)  (route-data-seq data)
-          (record? data)  nil
-          (map? data)     (list data)
-          (keyword? data) (list {:name data}))))))
+(def ^:private ROUTES
+  (s/recursive-path [] p
+    (s/if-path nested-route? [s/ALL vector? p] s/STAY)))
 
 (def ^:private request-methods
   #{:get :head :patch :delete :options :post :put :trace})
 
-(def ^:private handler-indexes
-  (set (concat [[:handler]]
-               (map vector request-methods)
-               (map (fn [m] [m :handler]) request-methods))))
+(def ^:private ROUTE-METHODS
+  [map? (s/submap request-methods) s/MAP-VALS])
 
-(defn- add-ref-to-key [m ks]
-  (if (qualified-keyword? (get-in m ks))
-    (update-in m ks ig/ref)
-    m))
+(defn- normalize-handlers [x]
+  (if (qualified-keyword? x) {:name x, :handler x} x))
 
-(defn- add-refs-to-route-data [route-data]
-  (if (some #(get-in route-data %) handler-indexes)
-    (reduce add-ref-to-key route-data handler-indexes)
-    (assoc route-data :handler (ig/ref (:name route-data)))))
+(defn- normalize-method-handlers [x]
+  (if (qualified-keyword? x) {:handler x} x))
 
-(defn- find-handlers-in-route-data [route-data]
-  (->> handler-indexes
-       (keep #(get-in route-data %))
-       (filter ig/ref?)
-       (map :key)))
+(def ^:private ENDPOINTS
+  [ROUTES s/LAST
+   (s/multi-path (s/view normalize-handlers)
+                 [ROUTE-METHODS (s/view normalize-method-handlers)])])
+
+(def ^:private HANDLERS
+  [ENDPOINTS map? (s/must :handler)])
 
 (defmethod ig/expand-key :duct.module/web
   [_ {:keys [features routes handler-opts]
@@ -62,7 +42,7 @@
   (let [featureset (set features)
         api?       (featureset :api)
         site?      (featureset :site)
-        routes     (walk-route-data routes add-refs-to-route-data)]
+        routes     (s/transform [HANDLERS qualified-keyword?] ig/ref routes)]
     `{:duct.server.http/jetty
       {:port    ~(ig/var 'port)
        :logger  ~(ig/refset :duct/logger)
@@ -117,9 +97,8 @@
       ~@(when site? [:duct.middleware.web/webjars {}]) ~@[]
       ~@(when site? [:duct.middleware.web/hiccup {}])  ~@[]
 
-      ~@(->> (route-data-seq routes)
-             (mapcat find-handlers-in-route-data)
-             (mapcat (fn [key] [key handler-opts])))
+      ~@(->> (s/select [HANDLERS ig/ref? :key] routes)
+             (mapcat (fn [k] [k handler-opts])))
       ~@[]
 
       :duct.middleware.web/hide-errors

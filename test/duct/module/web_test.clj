@@ -174,7 +174,7 @@
 (deftest routes-transform-test
   (is (= {:duct.router/reitit
           {:routes
-           [["/one" {:get (ig/ref ::handler1)}]
+           [["/one" {:get {:handler (ig/ref ::handler1)}}]
             ["/two" {:name ::handler2, :handler (ig/ref ::handler2)}]
             ["/three/" ["four" {:handler (ig/ref ::handler3)}]]
             ["/five" {:post {:handler (ig/ref ::handler4)}}]]
