@@ -7,8 +7,8 @@
 (deftest base-module-test
   (is (= {:duct.router/reitit
           {:routes []
-           :data {:module-middleware []}
-           :module-middleware
+           :data {:middleware []}
+           :middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
@@ -57,8 +57,8 @@
 (deftest api-module-test
   (is (= {:duct.router/reitit
           {:routes []
-           :data {:muuntaja {}, :coercion :malli, :module-middleware []}
-           :module-middleware
+           :data {:muuntaja {}, :coercion :malli, :middleware []}
+           :middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
@@ -104,8 +104,8 @@
   (is (= {:duct.router/reitit
           {:routes []
            :data
-           {:module-middleware [(ig/ref :duct.middleware.web/hiccup)]}
-           :module-middleware
+           {:middleware [(ig/ref :duct.middleware.web/hiccup)]}
+           :middleware
            [(ig/ref :duct.middleware.web/webjars)
             (ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
@@ -178,8 +178,8 @@
             ["/two" {:name ::handler2, :handler (ig/ref ::handler2)}]
             ["/three/" ["four" {:handler (ig/ref ::handler3)}]]
             ["/five" {:post {:handler (ig/ref ::handler4)}}]]
-           :data {:module-middleware []}
-           :module-middleware
+           :data {:middleware []}
+           :middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
             (ig/ref :duct.middleware.web/log-errors)
@@ -240,9 +240,9 @@
           {:routes
            [["/one" {:get {:handler (ig/ref ::handler)}
                      :middleware [(ig/ref ::foo)]}]]
-           :data {:module-middleware [[(ig/ref ::quz) 2]
+           :data {:middleware [[(ig/ref ::quz) 2]
                                       (ig/ref ::bang)]}
-           :module-middleware
+           :middleware
            [(ig/ref ::bar)
             [(ig/ref ::baz) 1]
             (ig/ref :duct.middleware.web/defaults)

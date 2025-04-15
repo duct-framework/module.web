@@ -73,10 +73,10 @@
        :data
        {~@(when api?
             [:muuntaja {}, :coercion :malli]) ~@[]
-        :module-middleware
+        :middleware
         [~@route-mw
          ~@(when site? [(ig/ref :duct.middleware.web/hiccup)])]}
-       :module-middleware
+       :middleware
        [~@middleware
         ~@(when site? [(ig/ref :duct.middleware.web/webjars)])
         ~(ig/ref :duct.middleware.web/defaults)
