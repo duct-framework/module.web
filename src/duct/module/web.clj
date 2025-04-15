@@ -36,13 +36,33 @@
 (def ^:private HANDLERS
   [ENDPOINTS map? (s/must :handler)])
 
+(def ^:private MIDDLEWARE
+  [s/ALL (s/multi-path (complement vector?) [vector? s/FIRST])])
+
+(def ^:private ROUTE-MIDDLEWARE
+  [ROUTES s/LAST map? (s/must :middleware) vector? MIDDLEWARE])
+
+(def ^:private REF-KEY
+  [ig/ref? (s/must :key)])
+
+(defn- add-refs-to-routes [routes]
+  (->> routes
+       (s/transform [HANDLERS qualified-keyword?] ig/ref)
+       (s/transform [ROUTE-MIDDLEWARE qualified-keyword?] ig/ref)))
+
+(defn- add-refs-to-middleware [middleware]
+  (s/transform [MIDDLEWARE qualified-keyword?] ig/ref middleware))
+
 (defmethod ig/expand-key :duct.module/web
-  [_ {:keys [features routes handler-opts]
-      :or   {routes [], handler-opts {}}}]
+  [_ {:keys [features routes handler-opts middleware-opts
+             middleware route-middleware]
+      :or   {routes [], handler-opts {}, middleware-opts {}}}]
   (let [featureset (set features)
         api?       (featureset :api)
         site?      (featureset :site)
-        routes     (s/transform [HANDLERS qualified-keyword?] ig/ref routes)]
+        routes     (add-refs-to-routes routes)
+        middleware (add-refs-to-middleware middleware)
+        route-mw   (add-refs-to-middleware route-middleware)]
     `{:duct.server.http/jetty
       {:port    ~(ig/var 'port)
        :logger  ~(ig/refset :duct/logger)
@@ -53,10 +73,12 @@
        :data
        {~@(when api?
             [:muuntaja {}, :coercion :malli]) ~@[]
-        ~@(when site?
-            [:module-middleware [(ig/ref :duct.middleware.web/hiccup)]]) ~@[]}
+        :module-middleware
+        [~@route-mw
+         ~@(when site? [(ig/ref :duct.middleware.web/hiccup)])]}
        :module-middleware
-       [~@(when site? [(ig/ref :duct.middleware.web/webjars)])
+       [~@middleware
+        ~@(when site? [(ig/ref :duct.middleware.web/webjars)])
         ~(ig/ref :duct.middleware.web/defaults)
         ~(ig/ref :duct.middleware.web/log-requests)
         ~(ig/ref :duct.middleware.web/log-errors)
@@ -76,7 +98,7 @@
           :cookies   true
           :session   {:flash true
                       :cookie-attrs {:http-only true, :same-site :strict}}
-          :security  {:anti-forgery  {:safe-header "X-Ring-Anti-Forgery"}
+          :security  {:anti-forgery {:safe-header "X-Ring-Anti-Forgery"}
                       :frame-options :sameorigin
                       :content-type-options :nosniff}
           :responses {:not-modified-responses true
@@ -97,8 +119,14 @@
       ~@(when site? [:duct.middleware.web/webjars {}]) ~@[]
       ~@(when site? [:duct.middleware.web/hiccup {}])  ~@[]
 
-      ~@(->> (s/select [HANDLERS ig/ref? :key] routes)
-             (mapcat (fn [k] [k handler-opts])))
+      ~@(mapcat (fn [k] [k handler-opts])
+                (s/select [HANDLERS REF-KEY] routes))
+      ~@[]
+
+      ~@(mapcat (fn [k] [k middleware-opts])
+                (concat (s/select [MIDDLEWARE REF-KEY] middleware)
+                        (s/select [MIDDLEWARE REF-KEY] route-mw)
+                        (s/select [ROUTE-MIDDLEWARE REF-KEY] routes)))
       ~@[]
 
       :duct.middleware.web/hide-errors

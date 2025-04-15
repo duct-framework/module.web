@@ -7,7 +7,7 @@
 (deftest base-module-test
   (is (= {:duct.router/reitit
           {:routes []
-           :data {}
+           :data {:module-middleware []}
            :module-middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
@@ -57,7 +57,7 @@
 (deftest api-module-test
   (is (= {:duct.router/reitit
           {:routes []
-           :data {:muuntaja {}, :coercion :malli}
+           :data {:muuntaja {}, :coercion :malli, :module-middleware []}
            :module-middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
@@ -178,7 +178,7 @@
             ["/two" {:name ::handler2, :handler (ig/ref ::handler2)}]
             ["/three/" ["four" {:handler (ig/ref ::handler3)}]]
             ["/five" {:post {:handler (ig/ref ::handler4)}}]]
-           :data {}
+           :data {:module-middleware []}
            :module-middleware
            [(ig/ref :duct.middleware.web/defaults)
             (ig/ref :duct.middleware.web/log-requests)
@@ -233,4 +233,69 @@
                        ["/two" ::handler2]
                        ["/three/" ["four" {:handler ::handler3}]]
                        ["/five" {:post {:handler ::handler4}}]]}}
+                    (ig/deprofile [:main])))))
+
+(deftest middleware-test
+  (is (= {:duct.router/reitit
+          {:routes
+           [["/one" {:get {:handler (ig/ref ::handler)}
+                     :middleware [(ig/ref ::foo)]}]]
+           :data {:module-middleware [[(ig/ref ::quz) 2]
+                                      (ig/ref ::bang)]}
+           :module-middleware
+           [(ig/ref ::bar)
+            [(ig/ref ::baz) 1]
+            (ig/ref :duct.middleware.web/defaults)
+            (ig/ref :duct.middleware.web/log-requests)
+            (ig/ref :duct.middleware.web/log-errors)
+            (ig/ref :duct.middleware.web/hide-errors)]
+           :handlers [(ig/ref :duct.handler.reitit/default)]}
+          :duct.middleware.web/defaults
+          {:params    {:urlencoded true, :keywordize true}
+           :responses {:not-modified-responses true
+                       :absolute-redirects     true
+                       :content-types          true
+                       :default-charset        "utf-8"}}
+          :duct.server.http/jetty
+          {:port    (ig/var 'port)
+           :handler (ig/ref :duct/router)
+           :logger  (ig/refset :duct/logger)}
+          ::handler {}
+          ::foo  {:name :foo}
+          ::bar  {:name :foo}
+          ::baz  {:name :foo}
+          ::bang {:name :foo}
+          ::quz  {:name :foo}
+          :duct.handler.reitit/default
+          {:not-found
+           (ig/ref :duct.handler.static/not-found)
+           :method-not-allowed
+           (ig/ref :duct.handler.static/method-not-allowed)
+           :not-acceptable
+           (ig/ref :duct.handler.static/not-acceptable)}
+          :duct.handler.static/bad-request
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Bad Request"}
+          :duct.handler.static/not-found
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Not Found"}
+          :duct.handler.static/method-not-allowed
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Method Not Allowed"}
+          :duct.handler.static/not-acceptable
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Not Acceptable"}
+          :duct.handler.static/internal-server-error
+          {:headers {"Content-Type" "text/plain; charset=UTF-8"}
+           :body    "Internal Server Error"}
+          :duct.middleware.web/stacktrace {}
+          :duct.middleware.web/hide-errors
+          {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
+          :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
+          :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
+         (ig/expand {:duct.module/web
+                     {:middleware-opts {:name :foo}
+                      :routes [["/one" {:get ::handler, :middleware [::foo]}]]
+                      :middleware [::bar [::baz 1]]
+                      :route-middleware [[::quz 2] ::bang]}}
                     (ig/deprofile [:main])))))
