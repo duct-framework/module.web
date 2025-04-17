@@ -7,7 +7,7 @@
                  [org.duct-framework/logger "0.4.0"]
                  [org.duct-framework/handler "0.1.1"]
                  [org.duct-framework/server.http.jetty "0.3.0"]
-                 [org.duct-framework/router.reitit "0.4.0"]
+                 [org.duct-framework/router.reitit "0.5.0"]
                  [com.rpl/specter "1.1.4"]
                  [integrant "0.13.1"]
                  [hiccup "2.0.0-RC5"]
