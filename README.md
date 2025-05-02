@@ -89,6 +89,36 @@ For example:
   :routes [["/" :app.example/handler]]}}
 ```
 
+Middleware can be added in one of three ways:
+
+- Via the top-level `:middleware` key
+- Via the top-level `:route-middleware` key
+- Via a `:middleware` key on a route options map
+
+All these keys take a vector of middleware definitions:
+
+```clojure
+{:middleware
+ [#ig/ref :eg/middleware1  ;; an Integrant ref
+  :eg/middleware2          ;; a namespaced keyword that will be turned into a ref
+  [:eg/middleware3 :arg]}  ;; middleware with an extra argument
+```
+
+Like routes, a corresponding definition will be automatically added for
+each middleware reference.
+
+The top-level `:middleware` option will add middleware to the whole
+handler, regardless of whether any route matches.
+
+The top-level `:route-middleware` option will add middleware if and only
+if a route matches.
+
+The per-route `:middleware` key will add middleware only to that route.
+
+You can also use the `:middleware-opts` function to automatically add
+common options to middleware, in the same way that `:handler-opts`
+works.
+
 ## License
 
 Copyright © 2025 James Reeves
