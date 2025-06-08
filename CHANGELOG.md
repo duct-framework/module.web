@@ -1,3 +1,7 @@
+## 0.12.9 (2025-06-08)
+
+* Updated Reitit router dependency to fix nested routes bug
+
 ## 0.12.8 (2025-06-08)
 
 * Added `:middleware` and `:route-middleware` options to module
