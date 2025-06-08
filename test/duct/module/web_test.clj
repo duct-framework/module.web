@@ -175,9 +175,11 @@
   (is (= {:duct.router/reitit
           {:routes
            [["/one" {:get {:handler (ig/ref ::handler1)}}]
-            ["/two" {:name ::handler2, :handler (ig/ref ::handler2)}]
-            ["/three/" ["four" {:handler (ig/ref ::handler3)}]]
-            ["/five" {:post {:handler (ig/ref ::handler4)}}]]
+            ["/foo"
+             ["/two" {:name ::handler2, :handler (ig/ref ::handler2)}]
+             ["/three/" ["four" {:handler (ig/ref ::handler3)}]]]
+            ["/five" {:post {:handler (ig/ref ::handler4)}}
+             ["/six" {:name ::handler5, :handler (ig/ref ::handler5)}]]]
            :data {:middleware []}
            :middleware
            [(ig/ref :duct.middleware.web/defaults)
@@ -199,6 +201,7 @@
           ::handler2 {:name :foo}
           ::handler3 {:name :foo}
           ::handler4 {:name :foo}
+          ::handler5 {:name :foo}
           :duct.handler.reitit/default
           {:not-found
            (ig/ref :duct.handler.static/not-found)
@@ -230,9 +233,11 @@
                      {:handler-opts {:name :foo}
                       :routes
                       [["/one" {:get ::handler1}]
-                       ["/two" ::handler2]
-                       ["/three/" ["four" {:handler ::handler3}]]
-                       ["/five" {:post {:handler ::handler4}}]]}}
+                       ["/foo"
+                        ["/two" ::handler2]
+                        ["/three/" ["four" {:handler ::handler3}]]]
+                       ["/five" {:post {:handler ::handler4}}
+                        ["/six" ::handler5]]]}}
                     (ig/deprofile [:main])))))
 
 (deftest middleware-test

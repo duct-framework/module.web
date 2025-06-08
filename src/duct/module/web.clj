@@ -12,9 +12,18 @@
 (defn- nested-route? [route]
   (and (vector? route) (some vector? route)))
 
+(defn- vector-of-routes? [route]
+  (and (vector? route) (vector? (first route))))
+
+(defn- endpoint? [x]
+  (or (keyword? x) (map? x)))
+
 (def ^:private ROUTES
   (s/recursive-path [] p
-    (s/if-path nested-route? [s/ALL vector? p] s/STAY)))
+    (s/cond-path
+      vector-of-routes? [s/ALL vector? p]
+      nested-route?     (s/multi-path s/STAY [s/ALL vector? p])
+      (constantly true) s/STAY)))
 
 (def ^:private request-methods
   #{:get :head :patch :delete :options :post :put :trace})
@@ -29,7 +38,7 @@
   (if (qualified-keyword? x) {:handler x} x))
 
 (def ^:private ENDPOINTS
-  [ROUTES s/LAST
+  [ROUTES (s/filterer endpoint?) s/FIRST
    (s/multi-path (s/view normalize-handlers)
                  [ROUTE-METHODS (s/view normalize-method-handlers)])])
 
