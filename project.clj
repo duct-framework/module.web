@@ -3,7 +3,7 @@
   :url "https://github.com/duct-framework/module.web"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.12.0"]
+  :dependencies [[org.clojure/clojure "1.12.1"]
                  [org.duct-framework/logger "0.4.0"]
                  [org.duct-framework/handler "0.1.1"]
                  [org.duct-framework/server.http.jetty "0.3.0"]
@@ -19,4 +19,4 @@
                  [ring-webjars "0.3.0"]]
   :plugins [[eftest "0.6.0"]]
   :profiles
-  {:dev {:dependencies [[ring/ring-mock "0.4.0"]]}})
+  {:dev {:dependencies [[ring/ring-mock "0.6.1"]]}})
