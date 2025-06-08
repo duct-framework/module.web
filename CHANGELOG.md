@@ -1,3 +1,9 @@
+## 0.12.8 (2025-06-08)
+
+* Added `:middleware` and `:route-middleware` options to module
+* Reverted router `:module-middleware` key back to `:middleware`
+* Changed route transforms to use Specter
+
 ## 0.12.7 (2025-04-02)
 
 * Changed router `:middleware` key to `:module-middleware`
