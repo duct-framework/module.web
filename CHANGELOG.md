@@ -1,3 +1,7 @@
+## 0.12.10 (2025-08-06)
+
+* Updated dependencies
+
 ## 0.12.9 (2025-06-08)
 
 * Updated Reitit router dependency to fix nested routes bug
