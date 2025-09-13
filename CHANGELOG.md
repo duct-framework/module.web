@@ -1,3 +1,7 @@
+## 0.12.12 (2025-09-13)
+
+* Updated dependencies
+
 ## 0.12.11 (2025-08-07)
 
 * Updated dependencies
