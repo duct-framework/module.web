@@ -18,8 +18,8 @@
   (logger/log logger :error ::handler-error ex))
 
 (defn wrap-log-requests
-  "Log each request using the supplied logger. The logger must implement the
-  duct.core.protocols/Logger protocol."
+  "Log each request using the supplied logger. The logger must satisfy the
+  duct.logger/Logger protocol."
   ([handler logger]
    (wrap-log-requests handler logger {}))
   ([handler logger {:keys [level] :or {level :info}}]
