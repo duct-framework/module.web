@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.12.2"]
                  [org.duct-framework/logger "0.4.0"]
                  [org.duct-framework/handler "0.1.2"]
-                 [org.duct-framework/server.http.jetty "0.3.2"]
+                 [org.duct-framework/server.http.jetty "0.3.3"]
                  [org.duct-framework/router.reitit "0.5.1"]
                  [com.rpl/specter "1.1.5"]
                  [integrant "1.0.0"]
