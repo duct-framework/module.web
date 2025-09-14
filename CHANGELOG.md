@@ -1,3 +1,7 @@
+## 0.12.13 (2025-09-14)
+
+* Added Integrant `:doc` annotations to keywords
+
 ## 0.12.12 (2025-09-13)
 
 * Updated dependencies
