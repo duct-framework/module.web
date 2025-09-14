@@ -93,7 +93,7 @@
       (handler request (comp respond hiccup-response) raise)))))
 
 (defmethod ig/init-key ::log-requests
-  [_ {:keys [logger options]}]
+  [_ {:keys [logger] :as options}]
   #(wrap-log-requests % logger (dissoc options :logger)))
 
 (defmethod ig/init-key ::log-errors [_ {:keys [logger]}]
