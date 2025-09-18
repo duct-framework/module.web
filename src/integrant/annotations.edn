@@ -15,6 +15,7 @@
 
   The *features* of the module determine how the module should be configured.
   - `:api` - add middleware and configration for a RESTful web API
+  - `:hiccup` - add middleware to automatically parse Hiccup responses
   - `:site` - add middleware and configuration for a user-facing web app
 
   A Duct `port` variable is added to configure the port the HTTP server will

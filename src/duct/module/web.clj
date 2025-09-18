@@ -69,6 +69,7 @@
   (let [featureset (set features)
         api?       (featureset :api)
         site?      (featureset :site)
+        hiccup?    (featureset :hiccup)
         routes     (add-refs-to-routes routes)
         middleware (add-refs-to-middleware middleware)
         route-mw   (add-refs-to-middleware route-middleware)]
@@ -84,7 +85,7 @@
             [:muuntaja {}, :coercion :malli]) ~@[]
         :middleware
         [~@route-mw
-         ~@(when site? [(ig/ref :duct.middleware.web/hiccup)])]}
+         ~@(when hiccup? [(ig/ref :duct.middleware.web/hiccup)])]}
        :middleware
        [~@middleware
         ~@(when site? [(ig/ref :duct.middleware.web/webjars)])
@@ -126,7 +127,7 @@
       :duct.middleware.web/stacktrace   {}
 
       ~@(when site? [:duct.middleware.web/webjars {}]) ~@[]
-      ~@(when site? [:duct.middleware.web/hiccup {}])  ~@[]
+      ~@(when hiccup? [:duct.middleware.web/hiccup {}])  ~@[]
 
       ~@(mapcat (fn [k] [k handler-opts])
                 (s/select [HANDLERS REF-KEY] routes))

@@ -30,20 +30,15 @@ To add this module to your configuration, add a reference to
 {:duct.module/web {}}
 ```
 
-To load in middleware and handlers appropriate to develop web services,
-add the `:api` keyword to the `:features` option:
+To change how the module behaves, you can supply a set of `:features`.
+A feature is one of the following keywords:
 
-```edn
-{:duct.module/web {:features #{:api}}}
-```
+- `:api`    - add middleware and handlers suitable for a web service
+- `:hiccup` - add middleware to automatically parse Hiccup responses
+- `:site`   - add middleware and handlers suitable for a user-facing web
+              application
 
-Or `:site` if you want to develop a user-facing web application:
-
-```edn
-{:duct.module/web {:features #{:site}}}
-```
-
-Or include both if you want both sets of features combined.
+Multiple features may be added.
 
 By default, the module uses the [Reitit][] Ring router. This is
 available via the `:duct.router/reitit` key. For example:
