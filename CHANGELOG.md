@@ -1,3 +1,8 @@
+## 0.13.0 (2025-09-20)
+
+* Separated out Hiccup middleware into its own module feature
+* Updated dependencies
+
 ## 0.12.13 (2025-09-14)
 
 * Added Integrant `:doc` annotations to keywords
