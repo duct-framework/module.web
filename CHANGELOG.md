@@ -1,3 +1,7 @@
+## 0.13.2 (2025-09-22)
+
+* Added `wrap-content-length` to default middleware
+
 ## 0.13.1 (2025-09-20)
 
 * Updated dependencies
