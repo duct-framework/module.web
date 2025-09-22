@@ -113,12 +113,14 @@
                       :content-type-options :nosniff}
           :responses {:not-modified-responses true
                       :absolute-redirects     true
+                      :content-length         true
                       :content-types          true
                       :default-charset        "utf-8"}
           :websocket {:keepalive true}}
          {:params    {:urlencoded true, :keywordize true}
           :responses {:not-modified-responses true
                       :absolute-redirects true
+                      :content-length true
                       :content-types true
                       :default-charset "utf-8"}})
 

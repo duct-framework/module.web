@@ -18,6 +18,7 @@
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
                        :absolute-redirects     true
+                       :content-length         true
                        :content-types          true
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
@@ -68,6 +69,7 @@
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
                        :absolute-redirects     true
+                       :content-length         true
                        :content-types          true
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
@@ -127,6 +129,7 @@
                        :content-type-options :nosniff}
            :responses {:not-modified-responses true
                        :absolute-redirects     true
+                       :content-length         true
                        :content-types          true
                        :default-charset        "utf-8"}
            :websocket {:keepalive true}}
@@ -189,6 +192,7 @@
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
                        :absolute-redirects     true
+                       :content-length         true
                        :content-types          true
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
@@ -244,7 +248,7 @@
            [["/one" {:get {:handler (ig/ref ::handler)}
                      :middleware [(ig/ref ::foo)]}]]
            :data {:middleware [[(ig/ref ::quz) 2]
-                                      (ig/ref ::bang)]}
+                               (ig/ref ::bang)]}
            :middleware
            [(ig/ref ::bar)
             [(ig/ref ::baz) 1]
@@ -257,6 +261,7 @@
           {:params    {:urlencoded true, :keywordize true}
            :responses {:not-modified-responses true
                        :absolute-redirects     true
+                       :content-length         true
                        :content-types          true
                        :default-charset        "utf-8"}}
           :duct.server.http/jetty
@@ -331,6 +336,7 @@
                        :content-type-options :nosniff}
            :responses {:not-modified-responses true
                        :absolute-redirects     true
+                       :content-length         true
                        :content-types          true
                        :default-charset        "utf-8"}
            :websocket {:keepalive true}}
