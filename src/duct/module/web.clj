@@ -107,7 +107,8 @@
                       :nested true, :keywordize true}
           :cookies   true
           :session   {:flash true
-                      :cookie-attrs {:http-only true, :same-site :strict}}
+                      :cookie-attrs {:http-only true, :same-site :strict}
+                      :store (ig/ref :duct.session-store/cookie)}
           :security  {:anti-forgery {:safe-header "X-Ring-Anti-Forgery"}
                       :frame-options :sameorigin
                       :content-type-options :nosniff}
@@ -128,7 +129,11 @@
       :duct.middleware.web/log-errors   {:logger ~(ig/ref :duct/logger)}
       :duct.middleware.web/stacktrace   {}
 
-      ~@(when site? [:duct.middleware.web/webjars {}]) ~@[]
+      ~@(when site?
+          [:duct.middleware.web/webjars {}
+           :duct.session-store/cookie {}])
+      ~@[]
+
       ~@(when hiccup? [:duct.middleware.web/hiccup {}])  ~@[]
 
       ~@(mapcat (fn [k] [k handler-opts])

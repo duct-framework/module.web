@@ -123,7 +123,8 @@
                        :keywordize true}
            :cookies   true
            :session   {:flash true
-                       :cookie-attrs {:http-only true, :same-site :strict}}
+                       :cookie-attrs {:http-only true, :same-site :strict}
+                       :store (ig/ref :duct.session-store/cookie)}
            :security  {:anti-forgery  {:safe-header "X-Ring-Anti-Forgery"}
                        :frame-options :sameorigin
                        :content-type-options :nosniff}
@@ -139,6 +140,7 @@
            :logger  (ig/refset :duct/logger)}
           :duct.middleware.web/webjars    {}
           :duct.middleware.web/stacktrace {}
+          :duct.session-store/cookie {}
           :duct.handler/file
           {:paths {"/" {:root "static"}}}
           :duct.handler/resource
@@ -330,7 +332,8 @@
                        :keywordize true}
            :cookies   true
            :session   {:flash true
-                       :cookie-attrs {:http-only true, :same-site :strict}}
+                       :cookie-attrs {:http-only true, :same-site :strict}
+                       :store (ig/ref :duct.session-store/cookie)}
            :security  {:anti-forgery  {:safe-header "X-Ring-Anti-Forgery"}
                        :frame-options :sameorigin
                        :content-type-options :nosniff}
@@ -347,6 +350,7 @@
           :duct.middleware.web/webjars    {}
           :duct.middleware.web/hiccup     {}
           :duct.middleware.web/stacktrace {}
+          :duct.session-store/cookie {}
           :duct.handler/file
           {:paths {"/" {:root "static"}}}
           :duct.handler/resource
