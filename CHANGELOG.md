@@ -1,3 +1,8 @@
+## 0.13.3 (2025-10-08)
+
+* Added `:duct.session-store/cookie`
+* Updated dependencies
+
 ## 0.13.2 (2025-09-22)
 
 * Added `wrap-content-length` to default middleware
