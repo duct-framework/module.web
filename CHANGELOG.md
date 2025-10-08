@@ -1,3 +1,7 @@
+## 0.13.4 (2025-10-08)
+
+* Added `cookie-store-key` var to module
+
 ## 0.13.3 (2025-10-08)
 
 * Added `:duct.session-store/cookie`
