@@ -8,4 +8,5 @@
  :duct.handler.static/bad-request           [:duct.handler/static]
  :duct.handler.static/not-found             [:duct.handler/static]
  :duct.handler.static/method-not-allowed    [:duct.handler/static]
- :duct.handler.static/internal-server-error [:duct.handler/static]}
+ :duct.handler.static/internal-server-error [:duct.handler/static]
+ :duct.session-store/cookie                 [:duct/session-store]}

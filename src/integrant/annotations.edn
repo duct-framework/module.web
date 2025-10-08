@@ -77,4 +77,16 @@
   - `:hiccup-renderer` - a function to render Hiccup (defaults to using
                          `hiccup2.core/html`)
 
-  [1]: https://github.com/weavejester/hiccup"}}
+  [1]: https://github.com/weavejester/hiccup"}
+
+ :duct.session-store/cookie
+ {:doc
+  "A Ring session store based on the standard cookie-based store:
+  `ring.middleware.session.cookie/cookie-store`. When this key is resumed,
+  typically as part of a `(reset)`, it will use the existing store if the
+  options haven't changed.
+
+  Takes the following options:
+  - `:key` - a string containing 16 hex-encoded bytes generated from a
+             secure random source, or `nil` if a random key should be
+             generated (the default)"}}
