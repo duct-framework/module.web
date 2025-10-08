@@ -131,7 +131,7 @@
 
       ~@(when site?
           [:duct.middleware.web/webjars {}
-           :duct.session-store/cookie {}])
+           :duct.session-store/cookie {:key (ig/var 'cookie-store-key)}])
       ~@[]
 
       ~@(when hiccup? [:duct.middleware.web/hiccup {}])  ~@[]

@@ -140,7 +140,7 @@
            :logger  (ig/refset :duct/logger)}
           :duct.middleware.web/webjars    {}
           :duct.middleware.web/stacktrace {}
-          :duct.session-store/cookie {}
+          :duct.session-store/cookie {:key (ig/var 'cookie-store-key)}
           :duct.handler/file
           {:paths {"/" {:root "static"}}}
           :duct.handler/resource
@@ -350,7 +350,7 @@
           :duct.middleware.web/webjars    {}
           :duct.middleware.web/hiccup     {}
           :duct.middleware.web/stacktrace {}
-          :duct.session-store/cookie {}
+          :duct.session-store/cookie {:key (ig/var 'cookie-store-key)}
           :duct.handler/file
           {:paths {"/" {:root "static"}}}
           :duct.handler/resource

@@ -1,7 +1,11 @@
 {:duct.module/web
  {:duct/vars
-  {port {:env PORT, :arg port, :type :int, :default 3000
-         :doc "The HTTP server port (default: 3000)"}}
+  {port
+   {:env PORT, :arg port, :type :int, :default 3000
+    :doc "The HTTP server port (default: 3000)"}
+   cookie-store-key
+   {:env COOKIE_STORE_KEY, :arg "cookie-store-key KEY", :default nil
+    :doc "Cookie session store key (default: random)"}}
   :doc
   "A module that adds components for web applications to the configuration.
 
