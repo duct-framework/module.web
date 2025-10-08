@@ -8,6 +8,7 @@
                  [org.duct-framework/handler "0.1.4"]
                  [org.duct-framework/server.http.jetty "0.3.4"]
                  [org.duct-framework/router.reitit "0.5.2"]
+                 [commons-io "2.20.0"]
                  [com.rpl/specter "1.1.6"]
                  [integrant "1.0.1"]
                  [hiccup "2.0.0"]
