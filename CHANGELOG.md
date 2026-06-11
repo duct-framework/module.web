@@ -1,3 +1,7 @@
+## 0.13.5 (2026-06-12)
+
+* Updated dependencies
+
 ## 0.13.4 (2025-10-08)
 
 * Added `cookie-store-key` var to module
