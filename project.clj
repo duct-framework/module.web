@@ -14,9 +14,9 @@
                  [hiccup "2.0.0"]
                  [org.slf4j/slf4j-nop "2.0.18"]
                  [org.webjars/normalize.css "5.0.0"]
-                 [ring/ring-core "1.15.4"]
-                 [ring/ring-devel "1.15.4"]
-                 [ring/ring-defaults "0.7.0"]
+                 [ring/ring-core "1.15.5"]
+                 [ring/ring-devel "1.15.5"]
+                 [ring/ring-defaults "0.7.1"]
                  [ring-webjars "0.3.1"]]
   :plugins [[eftest "0.6.0"]]
   :profiles

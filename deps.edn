@@ -9,7 +9,7 @@
         hiccup/hiccup {:mvn/version "2.0.0"}
         org.slf4j/slf4j-nop {:mvn/version "2.0.18"}
         org.webjars/normalize.css {:mvn/version "5.0.0"}
-        ring/ring-core {:mvn/version "1.15.4"}
-        ring/ring-devel {:mvn/version "1.15.4"}
-        ring/ring-defaults {:mvn/version "0.7.0"}
+        ring/ring-core {:mvn/version "1.15.5"}
+        ring/ring-devel {:mvn/version "1.15.5"}
+        ring/ring-defaults {:mvn/version "0.7.1"}
         ring-webjars/ring-webjars {:mvn/version "0.3.1"}}}
