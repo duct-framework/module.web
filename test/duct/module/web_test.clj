@@ -50,8 +50,8 @@
           :duct.middleware.web/stacktrace {}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
-          :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
+          :duct.middleware.web/log-requests {:logger (ig/refset :duct/logger)}
+          :duct.middleware.web/log-errors   {:logger (ig/refset :duct/logger)}}
          (ig/expand {:duct.module/web {}}
                     (ig/deprofile [:main])))))
 
@@ -97,8 +97,8 @@
           :duct.middleware.web/stacktrace {}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
-          :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
+          :duct.middleware.web/log-requests {:logger (ig/refset :duct/logger)}
+          :duct.middleware.web/log-errors   {:logger (ig/refset :duct/logger)}}
          (ig/expand {:duct.module/web {:features #{:api}}}
                     (ig/deprofile [:main])))))
 
@@ -169,8 +169,8 @@
            :body    (io/resource "duct/module/web/errors/500.html")}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
-          :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
+          :duct.middleware.web/log-requests {:logger (ig/refset :duct/logger)}
+          :duct.middleware.web/log-errors   {:logger (ig/refset :duct/logger)}}
          (ig/expand {:duct.module/web {:features #{:site}}}
                     (ig/deprofile [:main])))))
 
@@ -231,8 +231,8 @@
           :duct.middleware.web/stacktrace {}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
-          :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
+          :duct.middleware.web/log-requests {:logger (ig/refset :duct/logger)}
+          :duct.middleware.web/log-errors   {:logger (ig/refset :duct/logger)}}
          (ig/expand {:duct.module/web
                      {:handler-opts {:name :foo}
                       :routes
@@ -301,8 +301,8 @@
           :duct.middleware.web/stacktrace {}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
-          :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
+          :duct.middleware.web/log-requests {:logger (ig/refset :duct/logger)}
+          :duct.middleware.web/log-errors   {:logger (ig/refset :duct/logger)}}
          (ig/expand {:duct.module/web
                      {:middleware-opts {:name :foo}
                       :routes [["/one" {:get ::handler, :middleware [::foo]}]]
@@ -379,7 +379,7 @@
            :body    (io/resource "duct/module/web/errors/500.html")}
           :duct.middleware.web/hide-errors
           {:error-handler (ig/ref :duct.handler.static/internal-server-error)}
-          :duct.middleware.web/log-requests {:logger (ig/ref :duct/logger)}
-          :duct.middleware.web/log-errors   {:logger (ig/ref :duct/logger)}}
+          :duct.middleware.web/log-requests {:logger (ig/refset :duct/logger)}
+          :duct.middleware.web/log-errors   {:logger (ig/refset :duct/logger)}}
          (ig/expand {:duct.module/web {:features #{:site :hiccup}}}
                     (ig/deprofile [:main])))))

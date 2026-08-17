@@ -125,8 +125,8 @@
                       :content-types true
                       :default-charset "utf-8"}})
 
-      :duct.middleware.web/log-requests {:logger ~(ig/ref :duct/logger)}
-      :duct.middleware.web/log-errors   {:logger ~(ig/ref :duct/logger)}
+      :duct.middleware.web/log-requests {:logger ~(ig/refset :duct/logger)}
+      :duct.middleware.web/log-errors   {:logger ~(ig/refset :duct/logger)}
       :duct.middleware.web/stacktrace   {}
 
       ~@(when site?
