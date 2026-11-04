@@ -1,15 +1,15 @@
-{:deps {org.clojure/clojure {:mvn/version "1.12.5"}
+{:deps {org.clojure/clojure {:mvn/version "1.12.6"}
         org.duct-framework/logger {:mvn/version "0.4.0"}
-        org.duct-framework/handler {:mvn/version "0.1.4"}
-        org.duct-framework/server.http.jetty {:mvn/version "0.3.5"}
-        org.duct-framework/router.reitit {:mvn/version "0.5.2"}
+        org.duct-framework/handler {:mvn/version "0.1.5"}
+        org.duct-framework/server.http.jetty {:mvn/version "0.3.6"}
+        org.duct-framework/router.reitit {:mvn/version "0.5.3"}
         commons-io/commons-io {:mvn/version "2.22.0"}
         com.rpl/specter {:mvn/version "1.1.6"}
         integrant/integrant {:mvn/version "1.0.1"}
         hiccup/hiccup {:mvn/version "2.0.0"}
-        org.slf4j/slf4j-nop {:mvn/version "2.0.18"}
+        org.slf4j/slf4j-nop {:mvn/version "2.0.20"}
         org.webjars/normalize.css {:mvn/version "5.0.0"}
-        ring/ring-core {:mvn/version "1.15.5"}
-        ring/ring-devel {:mvn/version "1.15.5"}
+        ring/ring-core {:mvn/version "1.15.6"}
+        ring/ring-devel {:mvn/version "1.15.6"}
         ring/ring-defaults {:mvn/version "0.7.1"}
         ring-webjars/ring-webjars {:mvn/version "0.3.1"}}}
