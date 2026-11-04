@@ -1,3 +1,7 @@
+## 0.13.7 (2026-11-04)
+
+* Updated dependencies
+
 ## 0.13.6 (2026-08-17)
 
 * Fixed hard dependency on `:duct/logger`
